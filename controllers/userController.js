@@ -10,6 +10,9 @@ exports.preValidateUser = async (req) => {
     if (findedUser) {
         errors.mailSign = "Cette adresse mail est deja utilisé"
     }
+    if (req.multerError){
+        errors.fileError = "Veuillez entrer un fichier valide"
+    }
     let result = (Object.keys(errors).length == 0) ? null : errors
     return result
 };
@@ -21,17 +24,24 @@ exports.validateAndCreateUser = async (req) => {
     if (prevalidateError) {
         errors = { ...errors, ...prevalidateError };
     }
-    let newUser;
+          // Création de l'utilisateur avec Sequelize
+          const { name, firstname, email, password } = req.body;
+          let photo;
+          if (req.file && !req.multerError){
+               photo = req.file.path;
+          }
+  
+          const newUser = await user.build({
+              name,
+              firstname,
+              email,
+              password,
+              photo,
+             
+              // Autres attributs de l'utilisateur
+          });
     try {
-        // Création de l'utilisateur avec Sequelize
-        const { name, firstname, email, password } = req.body;
-        newUser = await user.build({
-            name,
-            firstname,
-            email,
-            password,
-            // Autres attributs de l'utilisateur
-        });
+        await newUser.validate();
         
     } catch (error) {
         error.errors.forEach((err) => {

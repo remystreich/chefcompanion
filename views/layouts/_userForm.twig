@@ -9,7 +9,7 @@
 						Création de compte
 					{% endif %}
 				</h2>
-				<form method="POST" {% if user %} action="/updateCompany/{{user.id}}" {% else %} action="/register" {% endif %}  enctype="multipart/form-data">
+				<form method="POST" {% if user %} action="/updateCompany/{{user.id}}" {% else %} action="/register" {% endif %} enctype="multipart/form-data">
 					<div class="grid gap-4 mb-4 sm:grid-cols-2 sm:gap-6 sm:mb-5 ">
 
 
@@ -22,7 +22,7 @@
 										<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
 									</svg>
 								</div>
-								<p class="text-red-500">{{errors.name}}</p>
+								<p class="text-red-500 mt-2">{{errors.name}}</p>
 							{% endif %}
 						</div>
 
@@ -35,21 +35,22 @@
 										<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
 									</svg>
 								</div>
-								<p class="text-red-500">{{errors.firstname}}</p>
+								<p class="text-red-500 mt-2">{{errors.firstname}}</p>
 							{% endif %}
 						</div>
 
-						<div class="md:col-span-2">
+						<div class="md:col-span-2 relative">
 							<label class="block text-white text-sm text-left mb-2">Photo de profil
 							</label>
-							<span class="sr-only">Choose profile photo</span>
-							<input name="photo" type="file" class="block w-full text-sm text-white
-																						      file:mr-4 file:py-2 file:px-4
-																						      file:rounded-md file:border-0
-																						      file:text-sm file:font-semibold
-																						      file:bg-teal-300 file:text-black
-																						      hover:file:bg-blue-600
-																						    "/>
+							<input name="photo" type="file" class="block w-full text-sm text-white file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold  file:bg-teal-300 file:text-black   hover:file:bg-blue-600  "/>
+							{% if errors.fileError %}
+								<div class="absolute top-10 right-0 flex items-center pointer-events-none pr-3">
+									<svg class="h-5 w-5 text-red-500" width="16" height="16" fill="currentColor" viewbox="0 0 16 16" aria-hidden="true">
+										<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+									</svg>
+								</div>
+								<p class="text-red-500 mt-2">{{errors.fileError}}</p>
+							{% endif %}
 
 						</div>
 
@@ -62,8 +63,8 @@
 										<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
 									</svg>
 								</div>
-								<p class="text-red-500">{{errors.mailSign}}</p>
-								<p class="text-red-500">{{errors.email}}</p>
+								<p class="text-red-500 mt-2">{{errors.mailSign}}</p>
+								<p class="text-red-500 mt-2">{{errors.email}}</p>
 							{% endif %}
 
 
@@ -78,7 +79,7 @@
 										<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
 									</svg>
 								</div>
-								<p class="text-red-500">{{errors.password}}</p>
+								<p class="text-red-500 mt-2">{{errors.password}}</p>
 							{% endif %}
 						</div>
 
@@ -91,7 +92,7 @@
 										<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
 									</svg>
 								</div>
-								<p class="text-red-500">{{errors.confirmPassword}}</p>
+								<p class="text-red-500 mt-2">{{errors.confirmPassword}}</p>
 							{% endif %}
 						</div>
 

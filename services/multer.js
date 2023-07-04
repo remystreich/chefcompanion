@@ -10,7 +10,7 @@ const mimeType = [
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         // Indique le dossier de destination des fichiers
-        cb(null, '/uploads');
+        cb(null, './uploads');
     },
     filename: (req, file, cb) => {
         let extArray = file.mimetype.split("/")
