@@ -6,6 +6,7 @@ const upload = require('../services/multer');
 const fs = require('fs');
 const path = require('path');
 
+//afficher register
 userRouter.get('/register', async (req, res) => {
     try {
         res.render('templates/register.twig')
@@ -15,8 +16,8 @@ userRouter.get('/register', async (req, res) => {
     }
 });
 
+//traiter le register
 userRouter.post('/register', upload.single('photo'), async (req, res) => {
-  
     try {
         let errors = await userController.validateAndCreateUser(req)
         if (errors) {
@@ -24,7 +25,6 @@ userRouter.post('/register', upload.single('photo'), async (req, res) => {
         }
         res.redirect('/login')
     } catch (error) {
-        console.log(error);
         if (req.file) {
             fs.unlink(path.join( req.file.path), err => {
                 if (err) console.error("Error deleting file:", err);
@@ -39,7 +39,35 @@ userRouter.post('/register', upload.single('photo'), async (req, res) => {
     }
 });
 
+//afficher login
+userRouter.get('/login', async (req, res) => {
+    try {
+        res.render('templates/login.twig');
+    } catch (error) {
+        console.log(error);
+        res.json(error);
+    }
+});
 
+//traiter le form de login
+userRouter.post('/login', async (req, res)=>{
+    try {
+       await userController.login(req);
+       res.redirect('/dashboard');
+    }
+    catch (error) {
+        console.log(error);
+        res.render('templates/login.twig',{
+            error: error
+        });
+    }
+});
+
+//logout 
+userRouter.get('/logout', async (req, res) => {
+    req.session.destroy();
+    res.redirect('/login');
+});
 
 module.exports = userRouter
 

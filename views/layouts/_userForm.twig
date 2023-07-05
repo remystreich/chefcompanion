@@ -1,115 +1,115 @@
-<div class=" w-100 mx-auto px-6  sm:max-w-2xl md:max-w-3xl md:px-12 lg:max-w-5xl xl:max-w-7xl xl:px-32">
-	<div class="text-center">
-		<div class="block rounded-lg bg-black bg-opacity-70 px-6  shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)]  md:py-4 md:px-12">
-			<div class="max-w-2xl px-4 py-8 mx-auto lg:py-16">
-				<h2 class="mb-10 text-5xl font-bold text-white ">
-					{% if user %}
-						Modifier les informations
-					{% else %}
-						Création de compte
-					{% endif %}
-				</h2>
-				<form method="POST" {% if user %} action="/updateCompany/{{user.id}}" {% else %} action="/register" {% endif %} enctype="multipart/form-data">
-					<div class="grid gap-4 mb-4 sm:grid-cols-2 sm:gap-6 sm:mb-5 ">
+<div class=" w-100 mx-auto px-6  sm:max-w-2xl md:max-w-3xl md:px-12 lg:max-w-5xl xl:max-w-7xl xl:px-32 relative md:pt-32 pb-32 pt-12">
+	<div class="block rounded-lg bg-black bg-opacity-70 px-6  shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)]  md:py-4 md:px-12">
+		<div class="max-w-2xl px-4 py-8 mx-auto lg:py-16">
+			<h2 class="mb-10 text-5xl font-bold text-white text-center">
+				{% if user %}
+					Modifier les informations
+				{% else %}
+					Création de compte
+				{% endif %}
+			</h2>
+			<form method="POST" {% if user %} action="/updateCompany/{{user.id}}" {% else %} action="/register" {% endif %} enctype="multipart/form-data">
+				<div class="grid gap-4 mb-4 sm:grid-cols-2 sm:gap-6 sm:mb-5 ">
 
 
-						<div class="w-full relative">
-							<label for="name" class="block text-left mb-2 text-sm font-medium text-white">Nom</label>
-							<input type="text" name="name" id="name" class=" border {% if errors.name %} border-red-500 bg-red-100 {% else %} border-gray-300 bg-gray-50 {% endif %}  text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="{{post.name}}" {% if user %} value="{{user.name}}" {% endif %} placeholder="Nom" required="">
-							{% if errors.name %}
-								<div class="absolute top-10 right-0 flex items-center pointer-events-none pr-3">
-									<svg class="h-5 w-5 text-red-500" width="16" height="16" fill="currentColor" viewbox="0 0 16 16" aria-hidden="true">
-										<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
-									</svg>
-								</div>
-								<p class="text-red-500 mt-2">{{errors.name}}</p>
-							{% endif %}
-						</div>
+					<div class="w-full relative">
+						<label for="name" class="block text-left mb-2 text-sm font-medium text-white">Nom</label>
+						<input type="text" name="name" id="name" class="border {% if errors.name %} border-red-500 bg-red-100 {% else %} border-gray-300 bg-gray-50 {% endif %}  text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="{{post.name}}" {% if user %} value="{{user.name}}" {% endif %} placeholder="Nom" required="">
+						{% if errors.name %}
+							<div class="absolute top-10 right-0 flex items-center pointer-events-none pr-3">
+								<svg class="h-5 w-5 text-red-500" width="16" height="16" fill="currentColor" viewbox="0 0 16 16" aria-hidden="true">
+									<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+								</svg>
+							</div>
+							<p class="text-red-500 mt-2">{{errors.name}}</p>
+						{% endif %}
+					</div>
 
-						<div class="w-full  relative">
-							<label for="firstname" class="block text-left mb-2 text-sm font-medium text-white ">Prénom</label>
-							<input type="text" name="firstname" id="firstname" class="border {% if errors.firstname %} border-red-500 bg-red-100 {% else %} border-gray-300 bg-gray-50 {% endif %} text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="{{post.firstname}}" {% if user %} value="{{user.siret}}" {% endif %} placeholder="Prénom" required="">
-							{% if errors.firstname %}
-								<div class="absolute top-10 right-0 flex items-center pointer-events-none pr-3">
-									<svg class="h-5 w-5 text-red-500" width="16" height="16" fill="currentColor" viewbox="0 0 16 16" aria-hidden="true">
-										<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
-									</svg>
-								</div>
-								<p class="text-red-500 mt-2">{{errors.firstname}}</p>
-							{% endif %}
-						</div>
+					<div class="w-full  relative">
+						<label for="firstname" class="block text-left mb-2 text-sm font-medium text-white ">Prénom</label>
+						<input type="text" name="firstname" id="firstname" class="border {% if errors.firstname %} border-red-500 bg-red-100 {% else %} border-gray-300 bg-gray-50 {% endif %} text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="{{post.firstname}}" {% if user %} value="{{user.siret}}" {% endif %} placeholder="Prénom" required="">
+						{% if errors.firstname %}
+							<div class="absolute top-10 right-0 flex items-center pointer-events-none pr-3">
+								<svg class="h-5 w-5 text-red-500" width="16" height="16" fill="currentColor" viewbox="0 0 16 16" aria-hidden="true">
+									<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+								</svg>
+							</div>
+							<p class="text-red-500 mt-2">{{errors.firstname}}</p>
+						{% endif %}
+					</div>
 
-						<div class="md:col-span-2 relative">
-							<label class="block text-white text-sm text-left mb-2">Photo de profil
-							</label>
-							<input name="photo" type="file" class="block w-full text-sm text-white file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold  file:bg-teal-300 file:text-black   hover:file:bg-blue-600  "/>
-							{% if errors.fileError %}
-								<div class="absolute top-10 right-0 flex items-center pointer-events-none pr-3">
-									<svg class="h-5 w-5 text-red-500" width="16" height="16" fill="currentColor" viewbox="0 0 16 16" aria-hidden="true">
-										<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
-									</svg>
-								</div>
-								<p class="text-red-500 mt-2">{{errors.fileError}}</p>
-							{% endif %}
-
-						</div>
-
-						<div class="md:col-span-2  relative">
-							<label for="email" class="block mb-2 text-sm font-medium text-white text-left ">Email</label>
-							<input type="text" name="email" id="email" class=" border {% if errors.email or errors.mailSign %} border-red-500 bg-red-100 {% else %} border-gray-300 bg-gray-50 {% endif %} text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="{{post.email}}" {% if user %} value="{{user.mail}}" {% else %} required="" {% endif %} placeholder="@">
-							{% if errors.mailSign or errors.email %}
-								<div class="absolute top-10 right-0 flex items-center pointer-events-none pr-3">
-									<svg class="h-5 w-5 text-red-500" width="16" height="16" fill="currentColor" viewbox="0 0 16 16" aria-hidden="true">
-										<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
-									</svg>
-								</div>
-								<p class="text-red-500 mt-2">{{errors.mailSign}}</p>
-								<p class="text-red-500 mt-2">{{errors.email}}</p>
-							{% endif %}
-
-
-						</div>
-
-						<div class="w-full  relative">
-							<label for="password" class="block mb-2 text-left text-sm font-medium text-white ">Mot de passe</label>
-							<input type="password" name="password" id="password" class=" border {% if errors.password %} border-red-500 bg-red-100 {% else %} border-gray-300 bg-gray-50 {% endif %} text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" value="{{post.password}}" placeholder="Mot de passe" required="">
-							{% if errors.password %}
-								<div class="absolute top-10 right-0 flex items-center pointer-events-none pr-3">
-									<svg class="h-5 w-5 text-red-500" width="16" height="16" fill="currentColor" viewbox="0 0 16 16" aria-hidden="true">
-										<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
-									</svg>
-								</div>
-								<p class="text-red-500 mt-2">{{errors.password}}</p>
-							{% endif %}
-						</div>
-
-						<div class="w-full  relative">
-							<label for="confirmPassword" class="block mb-2 text-left text-sm font-medium text-white ">Confirmer le mot de passe</label>
-							<input type="password" name="confirmPassword" id="confirmPassword" class=" border {% if errors.confirmPassword %} border-red-500 bg-red-100 {% else %} border-gray-300 bg-gray-50 {% endif %} text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="{{post.confirmPassword}}" placeholder="Confirmer le mot de passe" required="">
-							{% if errors.confirmPassword %}
-								<div class="absolute top-10 right-0 flex items-center pointer-events-none pr-3">
-									<svg class="h-5 w-5 text-red-500" width="16" height="16" fill="currentColor" viewbox="0 0 16 16" aria-hidden="true">
-										<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
-									</svg>
-								</div>
-								<p class="text-red-500 mt-2">{{errors.confirmPassword}}</p>
-							{% endif %}
-						</div>
+					<div class="col-span-1 md:col-span-2 relative">
+						<label class="block text-white text-sm text-left mb-2">Photo de profil
+						</label>
+						<input name="photo" type="file" class="block w-full text-sm text-white file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold  file:bg-teal-300 file:text-black   hover:file:bg-blue-600  "/>
+						{% if errors.fileError %}
+							<div class="absolute top-10 right-0 flex items-center pointer-events-none pr-3">
+								<svg class="h-5 w-5 text-red-500" width="16" height="16" fill="currentColor" viewbox="0 0 16 16" aria-hidden="true">
+									<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+								</svg>
+							</div>
+							<p class="text-red-500 mt-2">{{errors.fileError}}</p>
+						{% endif %}
 
 					</div>
-					<div class="flex items-center space-x-4">
-						<button type="submit" class=" mx-auto mt-8 text-black bg-teal-300 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">
-							{% if user %}
-								Mettre à jour
-							{% else %}
-								Valider
-							{% endif %}
-						</button>
+
+					<div class="md:col-span-2  relative">
+						<label for="email" class="block mb-2 text-sm font-medium text-white text-left ">Email</label>
+						<input type="text" name="email" id="email" class=" border {% if errors.email or errors.mailSign %} border-red-500 bg-red-100 {% else %} border-gray-300 bg-gray-50 {% endif %} text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="{{post.email}}" {% if user %} value="{{user.mail}}" {% else %} required="" {% endif %} placeholder="@">
+						{% if errors.mailSign or errors.email %}
+							<div class="absolute top-10 right-0 flex items-center pointer-events-none pr-3">
+								<svg class="h-5 w-5 text-red-500" width="16" height="16" fill="currentColor" viewbox="0 0 16 16" aria-hidden="true">
+									<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+								</svg>
+							</div>
+							<p class="text-red-500 mt-2">{{errors.mailSign}}</p>
+							<p class="text-red-500 mt-2">{{errors.email}}</p>
+						{% endif %}
+
 
 					</div>
-				</form>
-			</div>
 
+					<div class="w-full  relative">
+						<label for="password" class="block mb-2 text-left text-sm font-medium text-white ">Mot de passe</label>
+						<input type="password" name="password" id="password" class=" border {% if errors.password %} border-red-500 bg-red-100 {% else %} border-gray-300 bg-gray-50 {% endif %} text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" value="{{post.password}}" placeholder="Mot de passe" required="">
+						{% if errors.password %}
+							<div class="absolute top-10 right-0 flex items-center pointer-events-none pr-3">
+								<svg class="h-5 w-5 text-red-500" width="16" height="16" fill="currentColor" viewbox="0 0 16 16" aria-hidden="true">
+									<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+								</svg>
+							</div>
+							<p class="text-red-500 mt-2">{{errors.password}}</p>
+						{% endif %}
+					</div>
+
+					<div class="w-full  relative">
+						<label for="confirmPassword" class="block mb-2 text-left text-sm font-medium text-white ">Confirmer le mot de passe</label>
+						<input type="password" name="confirmPassword" id="confirmPassword" class=" border {% if errors.confirmPassword %} border-red-500 bg-red-100 {% else %} border-gray-300 bg-gray-50 {% endif %} text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="{{post.confirmPassword}}" placeholder="Confirmer le mot de passe" required="">
+						{% if errors.confirmPassword %}
+							<div class="absolute top-10 right-0 flex items-center pointer-events-none pr-3">
+								<svg class="h-5 w-5 text-red-500" width="16" height="16" fill="currentColor" viewbox="0 0 16 16" aria-hidden="true">
+									<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+								</svg>
+							</div>
+							<p class="text-red-500 mt-2">{{errors.confirmPassword}}</p>
+						{% endif %}
+					</div>
+
+				
+				<div class="col-span-1 md:col-span-2 text-center">
+					<button type="submit" class="text-black bg-teal-300 hover:bg-teal-400 focus:ring-4 focus:outline-none focus:ring-cyan-300  shadow-lg shadow-cyan-500/50  font-medium rounded-md text-lg px-5 py-2.5 text-center mr-2 mb-2">
+						{% if user %}
+							Mettre à jour
+						{% else %}
+							Valider
+						{% endif %}
+					</button>
+				</div>
+				</div>
+				 <p class="text-sm font-light text-white  text-center">
+                      Vous avez déjà un compte? <a href="/login" class="font-medium text-sky-600 hover:underline ">Connexion</a>
+                  </p>
+			</form>
 		</div>
 	</div>
 </div>
