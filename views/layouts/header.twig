@@ -23,7 +23,7 @@
 				<button type="button" class="flex mr-3 text-sm py-2 px-3 bg-opacity-70 bg-teal-300 shadow-lg shadow-cyan-500/50 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 hover:bg-teal-400" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
 					<span class="sr-only">Open user menu</span>
 					{% if user.photo %}
-						<img class="w-8 h-8 rounded-full" src="./{{user.photo}}" alt="user photo">
+						<img class="w-8 h-8 rounded-full" src="/{{user.photo}}" alt="user photo">
 					{% else %}
 						<i class="fa-regular fa-user fa-3x" style="color: black"></i>
 					{% endif %}

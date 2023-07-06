@@ -30,10 +30,7 @@ exports.validateAndCreateUser = async (req) => {
     }
     // Création de l'utilisateur avec Sequelize
     const { name, firstname, email, password } = req.body;
-    let photo;
-    if (req.file && !req.multerError) {
-        photo = req.file.path;
-    }
+    const photo = (req.file && !req.multerError) ? req.file.filename : undefined;
 
     const newUser = await userModel.build({
         name,

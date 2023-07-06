@@ -18,7 +18,7 @@ recipeRouter.get('/', async (req, res) => {
 });
 
 //affichage dashboard
-recipeRouter.get('/dashboard',authguard, async (req, res) => {
+recipeRouter.get('/dashboard', authguard, async (req, res) => {
     try {
         res.render('templates/dashboard.twig')
     } catch (error) {
@@ -38,14 +38,13 @@ recipeRouter.get('/addRecipe', authguard, async (req, res) => {
 });
 
 //ajout de recette
-recipeRouter.post('/addRecipe', authguard, upload.single('photo'),  async (req, res) => {
+recipeRouter.post('/addRecipe', authguard, upload.single('photo'), async (req, res) => {
     try {
-       
-        let errors = await recipeController.validateAndCreateRecipe(req)
-        if (errors) {
-            throw errors
+        let result = await recipeController.validateAndCreateRecipe(req)
+        if (result.errors) {
+            throw result.errors
         }
-        res.redirect('/addStep/1/'+req.idRecipe)
+        res.redirect(`/addStep/1/${result.id}`)
 
     } catch (error) {
         console.log(error);
@@ -61,11 +60,13 @@ recipeRouter.post('/addRecipe', authguard, upload.single('photo'),  async (req, 
     }
 });
 
+
 //affichage form d'étape
-recipeRouter.get('addStep/:step/:recipeId', authguard, async (req, res) =>{
+recipeRouter.get('addStep/:step/:recipeId', authguard, async (req, res) => {
     try {
         res.render('templates/addRecipe.twig',{
-            RecipeId: ecz,
+            step: req.params.step,
+            recipeId: req.params.recipeId,
         });
     } catch (error) {
         console.log(error);
@@ -73,12 +74,12 @@ recipeRouter.get('addStep/:step/:recipeId', authguard, async (req, res) =>{
     }
 });
 
-recipeRouter.post('addStep/:step/:recipe', authguard, async (req, res) =>{
+recipeRouter.post('addStep/:step/:recipeId', authguard, async (req, res) => {
     try {
-       //ton bordel
+        
 
-       nmbstep = parseInt(req.params.step) + 1
-       res.redirect(`addStep/${nmbstep}`)
+        nmbstep = parseInt(req.params.step) + 1;
+        res.redirect(`addStep/${nmbstep}/${req.params.recipeId}`)
     } catch (error) {
         console.log(error);
         res.json(error)

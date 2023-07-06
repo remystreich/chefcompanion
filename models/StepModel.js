@@ -1,14 +1,17 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../database');
+const recipeModel = require('./RecipeModel')
 
 
 
-const Recipe = sequelize.define('Recipe', {
+const StepModel = sequelize.define('Step', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true
   },
+
+ 
 
   title: {
     type: DataTypes.STRING,
@@ -34,7 +37,7 @@ const Recipe = sequelize.define('Recipe', {
     }
   },
 
-  description: {
+  details: {
     type: DataTypes.TEXT,
     allowNull: true,
     validate: {
@@ -45,7 +48,7 @@ const Recipe = sequelize.define('Recipe', {
     }
   },
 
-  guest_number: {
+  step_number: {
     type: DataTypes.INTEGER,
     allowNull: false,
     validate: {
@@ -60,39 +63,7 @@ const Recipe = sequelize.define('Recipe', {
     },
   },
 
-  photo: {
-    type: DataTypes.STRING(255),
-    allowNull: true,
-    validate: {
-      is: {
-        args: /^$|^.*\.(jpg|JPG|jpeg|JPEG|png|PNG)$/,
-        msg: "Le format de la photo est invalide"
-      }
-    }
-  },
-
-  category: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      notEmpty: {
-        args: true,
-        msg: "La catégorie ne peut pas être vide."
-      },
-      isIn: {
-        args: [["Entrée", "Plat", "Dessert", "Boisson"]],  // Remplacez ceci par votre liste de catégories
-        msg: "La catégorie n'est pas valide."
-      },
-    },
-  },
-
-  status: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-    defaultValue: false, // Par défaut, le statut sera 'privé' (false)
-  },
-
 });
 
 
-module.exports = Recipe;
+module.exports = StepModel;
