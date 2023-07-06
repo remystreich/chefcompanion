@@ -7,17 +7,24 @@
 		<link rel="stylesheet" href="/css/output.css">
 		<link rel="stylesheet" href="/css/autocomplete.css">
 		<script src="https://kit.fontawesome.com/463c3f4f8a.js" crossorigin="anonymous"></script>
+		
+		
         {% block head %} {% endblock %}
         
 	</head>
-	<body class="bg-gray-800">
+	<body class="bg-teal-100">
 		{% include "./layouts/_background.twig" %}
 		{% block header %} 
 			{% include "./layouts/_header.twig" %}
 		{% endblock %}
+		{% if user %}
+			{% include "./layouts/_sidebar.twig" %}
+		{% endif %}
+		
         {% block main %}{% endblock %}
         {% block footer %}{% endblock %}
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
+		
+		<script src="/dist/preline.js"></script>
         <script src="/js/script.js"></script>
 		{% block script %}{% endblock %}
 		

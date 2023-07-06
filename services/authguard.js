@@ -5,6 +5,7 @@ let authguard = async(req,res,next) =>{
     if(user){
         let userObject = user.toJSON();
         delete userObject.password; // Supprime le mot de passe du document.
+        req.session.user = userObject;
         res.locals.user = userObject;
         next()
     }else{

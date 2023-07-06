@@ -1,0 +1,17 @@
+{% extends "../base.twig" %}
+
+{% block head %}
+
+	<title>Nouvelle fiche</title>
+
+{% endblock %}
+
+{% block main %}
+
+    {% if recipeId %}
+		{% include "../layouts/_recipeStep.twig" %}
+	{% else %}
+		{% include "../layouts/_recipeHead.twig" %}
+	{% endif %}
+
+{% endblock %}

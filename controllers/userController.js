@@ -14,7 +14,7 @@ exports.preValidateUser = async (req) => {
         errors.confirmPassword = "les mots de passe doivent etre identique";
     }
 
-    if (req.multerError){
+    if (req.multerError) {
         errors.fileError = "Veuillez entrer un fichier valide"
     }
 
@@ -28,51 +28,51 @@ exports.validateAndCreateUser = async (req) => {
     if (prevalidateError) {
         errors = { ...errors, ...prevalidateError };
     }
-          // Création de l'utilisateur avec Sequelize
-          const { name, firstname, email, password } = req.body;
-          let photo;
-          if (req.file && !req.multerError){
-               photo = req.file.path;
-          }
-  
-          const newUser = await userModel.build({
-              name,
-              firstname,
-              email,
-              password,
-              photo,
-             
-              // Autres attributs de l'utilisateur
-          });
+    // Création de l'utilisateur avec Sequelize
+    const { name, firstname, email, password } = req.body;
+    let photo;
+    if (req.file && !req.multerError) {
+        photo = req.file.path;
+    }
+
+    const newUser = await userModel.build({
+        name,
+        firstname,
+        email,
+        password,
+        photo,
+
+        // Autres attributs de l'utilisateur
+    });
     try {
         await newUser.validate();
-        
+
     } catch (error) {
         error.errors.forEach((err) => {
             errors[err.path] = err.message;
-          });
+        });
     }
 
 
     if (Object.keys(errors).length == 0) {
         await newUser.save()
-        
+
     } else {
         return errors
     }
 };
 
-exports.login =async (req) => {
+exports.login = async (req) => {
     const user = await userModel.findOne({ where: { email: req.body.email } })
     if (user) {
-       if(bcrypt.compareSync(req.body.password, user.password)){
+        if (bcrypt.compareSync(req.body.password, user.password)) {
             req.session.userId = user.id
-       }
-       else{
-        throw {password: "Mot de passe incorrect"}
-       }
+        }
+        else {
+            throw { password: "Mot de passe incorrect" }
+        }
     }
     else {
-        throw {email: "Adresse email inconnue"}
+        throw { email: "Adresse email inconnue" }
     }
 };

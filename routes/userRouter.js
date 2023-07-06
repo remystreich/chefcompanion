@@ -26,15 +26,14 @@ userRouter.post('/register', upload.single('photo'), async (req, res) => {
         res.redirect('/login')
     } catch (error) {
         if (req.file) {
-            fs.unlink(path.join( req.file.path), err => {
+            fs.unlink(path.join(req.file.path), err => {
                 if (err) console.error("Error deleting file:", err);
             });
         }
-        res.render('templates/register.twig',{
+        res.render('templates/register.twig', {
             errors: error,
             post: req.body
         }
-
         )
     }
 });
@@ -50,15 +49,16 @@ userRouter.get('/login', async (req, res) => {
 });
 
 //traiter le form de login
-userRouter.post('/login', async (req, res)=>{
+userRouter.post('/login', async (req, res) => {
     try {
-       await userController.login(req);
-       res.redirect('/dashboard');
+        await userController.login(req);
+        res.redirect('/dashboard');
     }
     catch (error) {
         console.log(error);
-        res.render('templates/login.twig',{
-            error: error
+        res.render('templates/login.twig', {
+            errors: error,
+            post: req.body
         });
     }
 });

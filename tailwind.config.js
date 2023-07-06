@@ -1,9 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./views/**/*.{twig,js}"],
+  content: ["./views/**/*.{twig,js}", './node_modules/preline/dist/*.js'],
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [require('preline/plugin'),],
   
 }
