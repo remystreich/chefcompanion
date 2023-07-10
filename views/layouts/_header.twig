@@ -1,16 +1,16 @@
-<header class="flex flex-wrap sm:justify-start sm:flex-nowrap z-50 w-full  text-sm py-4">
+
+
+
+<header class="flex flex-wrap sm:justify-start sm:flex-nowrap z-50 w-full  text-sm py-4 ">
 	<nav class="max-w-[85rem] w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between" aria-label="Global">
 		<div class="flex items-center justify-between">
-
-			<a href="/" class="flex items-center">
-				<img src="/img/logo_cuisinet.png" class="h-12 mr-3" alt="Flowbite Logo"/>
-				<span class="self-center text-gray-900 text-2xl font-semibold whitespace-nowrap ">Cuisinet</span>
+			<a class="inline-flex items-center gap-x-2 text-xl font-semibold order-1 " href="#">
+				<img class="w-10 h-auto" src="/img/logo_cuisinet.png" alt="Logo">
+				Cuisinet
 			</a>
-
-
-			<div class="hs-dropdown  flex  md:absolute md:top-3 md:right-5">
+			<div class="hs-dropdown  flex md:absolute right-6 order-3  ">
 				{% if user %}
-					<button type="button" class="flex justify-center items-center mr-3  h-16 w-16 bg-opacity-90 text-teal-700 text-4xl hover:text-5xl focus:text-5xl hover:text-teal-800 focus:text-teal-800 focus:w-16 md:focus:w-20 focus:h-16 md:focus:h-20  hover:w-20 hover:h-20  transition-all shadow-gray rounded-full md:mr-0 shadow-lg ">
+					<button type="button" class="flex justify-center items-center mr-3  h-16 w-16 bg-opacity-90 text-teal-700 text-4xl hover:text-5xl focus:text-4xl md:focus:text-5xl hover:text-teal-800 focus:text-teal-800 focus:w-16 focus:h-16 md:focus:w-20 md:focus:h-20  hover:w-20 hover:h-20  transition-all shadow-gray rounded-full md:mr-0 shadow-lg ">
 						<span class="sr-only">Open user menu</span>
 						{% if user.photo %}
 							<img class=" rounded-full  " src="/uploads/{{user.photo}}" alt="user photo">
@@ -30,11 +30,11 @@
 								<a href="/updateUser/{{user.id}}" class="block px-4 py-2 text-sm ">Modifier le compte</a>
 							</li>
 							{# <li>
-								<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ">Settings</a>
-							</li>
-							<li>
-								<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ">Earnings</a>
-							</li> #}
+															<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ">Settings</a>
+														</li>
+														<li>
+															<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ">Earnings</a>
+														</li> #}
 							<li class="group relative flex w-full items-center rounded-lg px-2 py-1.5 text-sm text-teal-700 hover:bg-gray-50 hover:text-gray-700">
 								<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="1.25em" viewbox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"/></svg>
 								<a href="/logout" class="block px-4 py-2 text-sm  ">Déconnexion</a>
@@ -44,7 +44,7 @@
 
 				{% else %}
 					<button type="button" class="flex justify-center items-center mr-3 text-4xl h-16 w-16 bg-opacity-90 text-teal-700 hover:text-teal-700 focus:text-teal-700 focus:text-5xl focus:w-20 focus:h-20 hover:w-20 hover:h-20 hover:text-5xl transition-all shadow-gray rounded-full md:mr-0 shadow-lg ">
-					
+
 						<span class="sr-only">Open user menu</span>
 						<i class="fa-regular fa-user " fill:"currentcolor"></i>
 
@@ -68,22 +68,29 @@
 					</div>
 				{% endif %}
 			</div>
-		</div>
-		<div id="navbar-with-collapse" class="items-center   md:flex md:w-9/12">
-			<div class="items-center   md:flex md:w-9/12">
-				<form class="w-full mr-6 mt-5 md:mt-0">
-					<div class="relative flex rounded-md shadow-sm">
-						<button type="button" class="py-3 px-4 inline-flex flex-shrink-0 justify-center items-center rounded-l-md border border-transparent font-semibold bg-amber-400 text-gray-800 hover:bg-amber-500 focus:z-10 focus:outline-none  transition-all text-sm">Search</button>
-						<input type="text" id="hs-leading-button-add-on-with-icon-and-button" name="hs-leading-button-add-on-with-icon-and-button" class="py-3 px-4 pr-11 block w-full border-gray-200 shadow-sm rounded-r-md text-sm focus:z-10   focus:outline-amber-400 transition-all">
-						<div class="absolute inset-y-0 right-0 flex items-center pointer-events-none z-20 pr-4">
-							<svg class="h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewbox="0 0 16 16">
-								<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-							</svg>
-						</div>
-					</div>
-				</form>
+			<div class="sm:hidden order-2">
+				<button type="button" class="hs-collapse-toggle p-2 inline-flex justify-center items-center gap-2 rounded-md border font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm " data-hs-collapse="#searchbar" aria-controls="navbar-image-and-text-2" aria-label="Toggle navigation">
+					<svg class="hs-collapse-open:hidden w-4 h-4" width="16" height="16" fill="currentColor" viewbox="0 0 16 16">
+						<path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+					</svg>
+					<svg class="hs-collapse-open:block hidden w-4 h-4" width="16" height="16" fill="currentColor" viewbox="0 0 16 16">
+						<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+					</svg>
+				</button>
 			</div>
 		</div>
-
+		<div id="searchbar" class=" hs-collapse hidden overflow-hidden md:justify-center transition-all duration-300 basis-full grow sm:flex">
+			<form class="w-full md:w-9/12  mr-6 mt-5 md:mt-0">
+				<div class="relative flex rounded-md shadow-sm">
+					<button type="button" class="py-3 px-4 inline-flex flex-shrink-0 justify-center items-center rounded-l-md border border-transparent font-semibold bg-amber-400 text-gray-800 hover:bg-amber-500 focus:z-10 focus:outline-none  transition-all text-sm">Search</button>
+					<input type="text" id="hs-leading-button-add-on-with-icon-and-button" name="hs-leading-button-add-on-with-icon-and-button" class="py-3 px-4 pr-11 block w-full border-gray-200 shadow-sm rounded-r-md text-sm focus:z-10   focus:outline-amber-400 transition-all">
+					<div class="absolute inset-y-0 right-0 flex items-center pointer-events-none z-20 pr-4">
+						<svg class="h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewbox="0 0 16 16">
+							<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+						</svg>
+					</div>
+				</div>
+			</form>
+		</div>
 	</nav>
 </header>

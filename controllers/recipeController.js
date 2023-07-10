@@ -1,4 +1,7 @@
 const recipeModel = require('../models/RecipeModel');
+const stepModel = require('../models/StepModel');
+const ingredientModel = require ('../models/IngredientModel')
+const ingredientController = require('./ingredientController');
 
 exports.validateAndCreateRecipe = async (req) => {
     let errors = {};
@@ -36,4 +39,39 @@ exports.validateAndCreateRecipe = async (req) => {
 
     const savedRecipe = await newRecipe.save();
     return { errors: null, id: savedRecipe.id };
+};
+
+exports.validateAndCreateStep =async (req)=> {
+    let errors= {};
+    let ingredientResult = await ingredientController.validateAndCreateIngredient(req);
+    console.log(ingredientResult);
+    if (ingredientResult.errors) {
+        throw ingredientResult.errors
+    }
+    const { title, details} = req.body;
+    const step_number = req.params.step;
+    const recipe_id = req.params.recipeId;
+
+    const newStep = stepModel.build({
+        title,
+        details,
+        step_number,
+        recipe_id
+    });
+
+    try {
+        await newStep.validate();
+    } catch (validationError) {
+        validationError.errors.forEach((err) => {
+            errors[err.path] = err.message;
+        });
+    }
+
+    if (Object.keys(errors).length == 0) {
+        await newStep.save();
+        let ingredient = await ingredientModel.findByPk(ingredientResult.id)
+        newStep.addIngredient(ingredient, { through: { quantity: 1 } });
+    } else {
+        return errors
+    }
 };

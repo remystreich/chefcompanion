@@ -8,10 +8,12 @@
 
 {% block main %}
 
-    {% if recipeId %}
+	{% if recipeId %}
 		{% include "../layouts/_recipeStep.twig" %}
 	{% else %}
 		{% include "../layouts/_recipeHead.twig" %}
 	{% endif %}
+
+	{% include "../layouts/_addIngredient.twig" %}
 
 {% endblock %}

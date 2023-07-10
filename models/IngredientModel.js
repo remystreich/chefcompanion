@@ -11,6 +11,7 @@ const IngredientModel = sequelize.define('Ingredient', {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
         set(value) {
             this.setDataValue('name', value.toLowerCase());
         },
@@ -65,7 +66,7 @@ const IngredientModel = sequelize.define('Ingredient', {
                 msg: "L'unité de mesure ne peut pas être vide."
             },
             isIn: {
-                args: [["Entrée", "Plat", "Dessert", "Boisson"]],  // Remplacez ceci par votre liste de catégories
+                args: [["kg", "g", "l", "pce"]],  // Remplacez ceci par votre liste de catégories
                 msg: "La catégorie n'est pas valide."
             },
         }

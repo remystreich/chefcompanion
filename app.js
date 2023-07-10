@@ -4,6 +4,7 @@ const session = require('express-session');
 require('dotenv').config();
 const userRouter = require('./routes/userRouter');
 const recipeRouter = require('./routes/recipeRouter');
+const ingredientRouter = require('./routes/ingredientRouter')
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use(function(req, res, next) {
 app.use(express.urlencoded({ extended: true }))
 app.use(userRouter);
 app.use(recipeRouter);
+app.use(ingredientRouter);
 
 sequelize.authenticate()
   .then(() => {

@@ -10,12 +10,12 @@ const sequelize = new Sequelize( process.env.DB_NAME, process.env.DB_USER, proce
 module.exports = sequelize;
 
 // Ensuite, vous pouvez require vos modèles
-
 require('./models/UserModel');
 require('./models/RecipeModel');
 require('./models/StepModel');
 require('./models/jointures')
 require('./models/IngredientModel');
+require('./models/Step_IngredientModel')
 
 sequelize.sync({ force: false })
 .then(() => {

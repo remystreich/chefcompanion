@@ -44,7 +44,7 @@ recipeRouter.post('/addRecipe', authguard, upload.single('photo'), async (req, r
         if (result.errors) {
             throw result.errors
         }
-        res.redirect(`/addStep/1/${result.id}`)
+        res.redirect(`/addRecipe/1/${result.id}`)
 
     } catch (error) {
         console.log(error);
@@ -62,9 +62,9 @@ recipeRouter.post('/addRecipe', authguard, upload.single('photo'), async (req, r
 
 
 //affichage form d'étape
-recipeRouter.get('addStep/:step/:recipeId', authguard, async (req, res) => {
+recipeRouter.get('/addRecipe/:step/:recipeId', authguard, async (req, res) => {
     try {
-        res.render('templates/addRecipe.twig',{
+        res.render('templates/addRecipe.twig', {
             step: req.params.step,
             recipeId: req.params.recipeId,
         });
@@ -74,15 +74,28 @@ recipeRouter.get('addStep/:step/:recipeId', authguard, async (req, res) => {
     }
 });
 
-recipeRouter.post('addStep/:step/:recipeId', authguard, async (req, res) => {
+//traiter formulaire etape
+recipeRouter.post('/addStep/:step/:recipeId', authguard, async (req, res) => {
     try {
-        
-
-        nmbstep = parseInt(req.params.step) + 1;
-        res.redirect(`addStep/${nmbstep}/${req.params.recipeId}`)
+        let errors = await recipeController.validateAndCreateStep(req);
+        if (errors) {
+            throw errors
+        }
+        if (req.body.action === 'next') {
+            nmbstep = parseInt(req.params.step) + 1;
+            res.redirect(`/addRecipe/${nmbstep}/${req.params.recipeId}`)
+        }
+        else {
+            res.redirect('/dashboard')
+        }
     } catch (error) {
         console.log(error);
-        res.json(error)
+        res.render('templates/addRecipe.twig', {
+            errors: error,
+            post: req.body,
+            step: req.params.step,
+            recipeId: req.params.recipeId,
+        });
     }
 });
 

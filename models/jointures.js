@@ -2,6 +2,7 @@ const User = require('./UserModel');
 const Recipe = require('./RecipeModel');
 const Step = require('./StepModel');
 const Ingredient = require('./IngredientModel');
+const Step_Ingredient = require('./Step_IngredientModel')
 
 
 //jointures user -> recipe
@@ -12,10 +13,10 @@ Recipe.belongsTo(User, { as: 'User', foreignKey: 'user_id' });
 Recipe.hasMany(Step, { as: 'Steps', foreignKey: 'recipe_id' });
 Step.belongsTo(Recipe, { as: 'Recipe', foreignKey: 'recipe_id' });
 
-//jointures steps -> ingredients
-Step.belongsToMany(Ingredient, { through: 'Step_Ingredient' });
-Ingredient.belongsToMany(Step, { through: 'Step_Ingredient' });
-
 //jointures user -> ingredients
 User.hasMany(Ingredient, { as: 'Ingredients', foreignKey: 'user_id' });
 Ingredient.belongsTo(User, { as: 'User', foreignKey: 'user_id' });
+
+//jointure step-> ingredients
+Step.belongsToMany(Ingredient, { through: Step_Ingredient });
+Ingredient.belongsToMany(Step, { through: Step_Ingredient });
