@@ -40,3 +40,24 @@ exports.validateAndCreateIngredient =async (req)=> {
         }
     }
 };
+
+exports.findAndSortIngredient = async (req)=>{
+    const userId = req.session.user.id;
+    const ingredients = await ingredientModel.findAll({
+        where: {
+            user_id: userId
+        },
+        order: [['type', 'ASC']]
+    });
+   
+    // Organiser les ingrédients par catégorie
+    const categories = {};
+    for (const ingredient of ingredients) {
+        const categoryName = ingredient.type;
+        if (!categories[categoryName]) {
+            categories[categoryName] = [];
+        }
+        categories[categoryName].push(ingredient);
+    }
+    return categories;
+}

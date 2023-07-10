@@ -1,3 +1,4 @@
+//gestion du form ajout d'ingredients
 document.getElementById('ingredientForm').addEventListener('submit', async function (event) {
     event.preventDefault();
 
@@ -70,7 +71,13 @@ document.getElementById('ingredientForm').addEventListener('submit', async funct
             </svg>
             </div>`
             document.getElementById('errorUM2').innerHTML = `<p class="mt-2 text-sm text-red-600">${error.unit_mesure}</p>`
-
         }
     }
+});
+
+
+  // Pass single element
+  const element = document.getElementById('ingredientName')
+  var choices = new Choices(element, {
+    allowHTML: true
 });

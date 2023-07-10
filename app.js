@@ -10,7 +10,8 @@ const app = express();
 
 app.use(express.json())
 app.use(express.static("./assets"))
-app.use(express.static("./node_modules/preline"))
+app.use(express.static("./node_modules/preline"));
+app.use(express.static("./node_modules/choices.js/public/assets"));
 app.use(session({
     secret: process.env.SECRET_SESSION,
     resave: false,

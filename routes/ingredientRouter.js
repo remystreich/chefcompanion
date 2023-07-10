@@ -10,16 +10,11 @@ ingredientRouter.post('/addIngredient', authguard,  async (req, res) => {
         if (result.errors) {
             throw result.errors
         }
-        res.json({ message: "Ingredient a été ajouté avec succès." });
+        res.json({ message: "Ingredient ajouté avec succès." });
 
     } catch (error) {
         console.log(error);
-       
-        res.status(500).json({
-           
-           
-             error
-        });
+        res.status(500).json({error});    
     }
 });
 

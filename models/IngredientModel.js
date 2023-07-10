@@ -35,26 +35,17 @@ const IngredientModel = sequelize.define('Ingredient', {
 
     type: {
         type: DataTypes.STRING,
-        allowNull: false,
-        set(value) {
-            this.setDataValue('type', value.toLowerCase());
-        },
-        validate: {
-            notNull: {
-                msg: "Le type est requis"
-            },
-            notEmpty: {
-                msg: "Le type est requis"
-            },
-            len: {
-                args: [1, 255],
-                msg: "Le type doit contenir entre 1 et 255 caractères"
-            },
-            is: {
-                args: /^[a-zà-ÿ0-9 ,.'-]+$/i, // n'autorise que les lettres (en minuscules et majuscules), les chiffres, les espaces, les virgules, les points, les apostrophes et les tirets
-                msg: "Le type contient des caractères non valides"
-            }
-        }
+    allowNull: false,
+    validate: {
+      notEmpty: {
+        args: true,
+        msg: "La catégorie ne peut pas être vide."
+      },
+      isIn: {
+        args: [["legumerie", "boucherie", "poissonnerie", "bof", "economat"]],  // Remplacez ceci par votre liste de catégories
+        msg: "La catégorie n'est pas valide."
+      },
+    },
     },
 
     unit_mesure: {

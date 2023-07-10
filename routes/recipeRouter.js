@@ -1,6 +1,8 @@
 const recipeRouter = require('express').Router();
 const authguard = require("../services/authguard");
 const recipeController = require('../controllers/recipeController');
+const ingredientController = require('../controllers/ingredientController')
+const ingredientModel = require('../models/IngredientModel')
 const upload = require('../services/multer');
 const fs = require('fs');
 const path = require('path');
@@ -64,9 +66,12 @@ recipeRouter.post('/addRecipe', authguard, upload.single('photo'), async (req, r
 //affichage form d'étape
 recipeRouter.get('/addRecipe/:step/:recipeId', authguard, async (req, res) => {
     try {
+       const ingredients = await ingredientController.findAndSortIngredient(req);
+       
         res.render('templates/addRecipe.twig', {
             step: req.params.step,
             recipeId: req.params.recipeId,
+            ingredients
         });
     } catch (error) {
         console.log(error);
@@ -77,6 +82,7 @@ recipeRouter.get('/addRecipe/:step/:recipeId', authguard, async (req, res) => {
 //traiter formulaire etape
 recipeRouter.post('/addStep/:step/:recipeId', authguard, async (req, res) => {
     try {
+        console.log(req.body);
         let errors = await recipeController.validateAndCreateStep(req);
         if (errors) {
             throw errors

@@ -43,11 +43,6 @@ exports.validateAndCreateRecipe = async (req) => {
 
 exports.validateAndCreateStep =async (req)=> {
     let errors= {};
-    let ingredientResult = await ingredientController.validateAndCreateIngredient(req);
-    console.log(ingredientResult);
-    if (ingredientResult.errors) {
-        throw ingredientResult.errors
-    }
     const { title, details} = req.body;
     const step_number = req.params.step;
     const recipe_id = req.params.recipeId;
@@ -69,7 +64,7 @@ exports.validateAndCreateStep =async (req)=> {
 
     if (Object.keys(errors).length == 0) {
         await newStep.save();
-        let ingredient = await ingredientModel.findByPk(ingredientResult.id)
+        let ingredient = await ingredientModel.findByPk(ingredientResult.id) ///////////////////////////////////////////////////////////////////////
         newStep.addIngredient(ingredient, { through: { quantity: 1 } });
     } else {
         return errors
