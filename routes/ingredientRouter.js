@@ -5,12 +5,18 @@ const ingredientController = require('../controllers/ingredientController');
 //ajout de recette
 ingredientRouter.post('/addIngredient', authguard,  async (req, res) => {
     try {
-        console.log(req.body);
+        
         let result = await ingredientController.validateAndCreateIngredient(req)
         if (result.errors) {
             throw result.errors
         }
-        res.json({ message: "Ingredient ajouté avec succès." });
+        
+        res.json({ 
+            message: "Ingredient ajouté avec succès.",
+            name: result.name,
+            id: result.id,
+            type: result.type,
+        });
 
     } catch (error) {
         console.log(error);

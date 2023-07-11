@@ -2,10 +2,10 @@ const ingredientModel = require('../models/IngredientModel');
 const { Sequelize } = require('sequelize'); // Make sure to import Sequelize
 
 
-exports.validateAndCreateIngredient =async (req)=> {
-    let errors= {};
-    
-    const { name, type, unit_mesure, price} = req.body;
+exports.validateAndCreateIngredient = async (req) => {
+    let errors = {};
+
+    const { name, type, unit_mesure, price } = req.body;
     const user_id = req.session.user.id;
 
     const newIngredient = ingredientModel.build({
@@ -23,14 +23,18 @@ exports.validateAndCreateIngredient =async (req)=> {
             errors[err.path] = err.message;
         });
     }
-    
+
     if (Object.keys(errors).length > 0) {
         return { errors, id: null };
     }
 
     try {
         const savedIngredient = await newIngredient.save();
-        return { errors: null, id: savedIngredient.id };
+        return {
+            errors: null,
+            id: savedIngredient.id,
+            name : savedIngredient.name,
+        };
     } catch (saveError) {
         if (saveError instanceof Sequelize.UniqueConstraintError) {
             errors['name'] = 'Un ingrédient avec ce nom existe déjà.';
@@ -41,7 +45,7 @@ exports.validateAndCreateIngredient =async (req)=> {
     }
 };
 
-exports.findAndSortIngredient = async (req)=>{
+exports.findAndSortIngredient = async (req) => {
     const userId = req.session.user.id;
     const ingredients = await ingredientModel.findAll({
         where: {
@@ -49,7 +53,7 @@ exports.findAndSortIngredient = async (req)=>{
         },
         order: [['type', 'ASC']]
     });
-   
+
     // Organiser les ingrédients par catégorie
     const categories = {};
     for (const ingredient of ingredients) {

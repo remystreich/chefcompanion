@@ -14,6 +14,11 @@
 		{% include "../layouts/_recipeHead.twig" %}
 	{% endif %}
 
-	{% include "../layouts/_addIngredient.twig" %}
-
 {% endblock %}
+
+
+{% if recipeId %}
+	{% block script %}
+			<script src="/js/addStepScript.js"></script>
+	{% endblock %}
+{% endif %}

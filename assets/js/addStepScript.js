@@ -1,6 +1,10 @@
 //gestion du form ajout d'ingredients
 
-
+// Pass single element
+const element = document.getElementById('ingredientName')
+var choices = new Choices(element, {
+    allowHTML: true
+});
 
 document.getElementById('ingredientForm').addEventListener('submit', async function (event) {
     event.preventDefault();
@@ -29,7 +33,25 @@ document.getElementById('ingredientForm').addEventListener('submit', async funct
         
         const responseData = await response.json();
      
-       
+        //setter la valeur du nouvel ingrédient dans l'input
+        choices.setChoices([{ value: responseData.id, label: responseData.name, selected: true }], 'value', 'label', false);
+
+        let newOption = {
+            value: responseData.id,
+            label: responseData.name,
+            selected: false
+        };
+
+
+        // Créez un nouvel objet groupe
+        let newGroup = {
+            label: "nouveau",
+            id: 1, // vous pouvez attribuer un id unique à votre groupe
+            choices: [newOption]
+        };
+
+        // Ajoutez le groupe et l'option via Choices.js
+        choices.setChoices([newGroup], 'value', 'label', false);
 
         //afficher le succes dans une alert et fermer la modal
         alert(responseData.message);
