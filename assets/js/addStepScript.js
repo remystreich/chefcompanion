@@ -118,7 +118,7 @@ document.getElementById('ingredientForm').addEventListener('submit', async funct
 
 let idCount = 0
 //fonction creation de ligne d'input pour les ingredients
-function createIngredientInput(){
+function createIngredientInput(i){
     idCount++
 
     // Crée une nouvelle div
@@ -146,9 +146,35 @@ function createIngredientInput(){
     newSelect.required = true;
     selectWrapper.appendChild(newSelect);
 
+    let defaultCategory = document.createElement("optgroup")
+    defaultCategory.label = ""
+    newSelect.appendChild(defaultCategory);
+
     let defaultOption = document.createElement('option');
     defaultOption.selected = true;
-    newSelect.appendChild(defaultOption);
+
+    if (typeof post !== 'undefined') {
+        defaultOption.value = i
+        let ingredientName = null;
+        for (let category in ingredients) {
+           
+            for (let j = 0; j < ingredients[category].length; j++) {
+              
+                if (ingredients[category][j].dataValues.id == i) {
+                    ingredientName = ingredients[category][j].dataValues.name;
+                    break;
+                }
+            }
+            if (ingredientName) break;
+        }
+    
+        defaultOption.textContent = ingredientName || "" ;
+    }
+    else {
+        defaultOption.textContent =""
+    }
+    defaultCategory.appendChild(defaultOption);
+
 
     for (let category in ingredients) {
         let optgroup = document.createElement('optgroup');
@@ -197,6 +223,6 @@ document.getElementById('createInputBtn').addEventListener('click', () => {
     createIngredientInput();
 }) 
 
-for (let i = 0; i < nmbrInput; i++) {
-		createIngredientInput()
+for (let i = 0; i < post.ingredients.length; i++) {
+		createIngredientInput(post.ingredients[i]);
 }
