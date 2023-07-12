@@ -1,10 +1,19 @@
 //gestion du form ajout d'ingredients
 
 // Pass single element
-const element = document.getElementById('ingredientName')
-var choices = new Choices(element, {
-    allowHTML: true
-});
+// const element = document.getElementById('ingredientName')
+// var choices = new Choices(element, {
+//     allowHTML: true
+// });
+
+//initialiser le select avec choices.js
+function choicesLaunch(elem) {
+        new Choices(elem, {
+            allowHTML: true
+        });
+}
+
+
 
 document.getElementById('ingredientForm').addEventListener('submit', async function (event) {
     event.preventDefault();
@@ -30,9 +39,9 @@ document.getElementById('ingredientForm').addEventListener('submit', async funct
             const errorData = await response.json();
             throw errorData.error
         }
-        
+
         const responseData = await response.json();
-     
+
         //setter la valeur du nouvel ingrédient dans l'input
         choices.setChoices([{ value: responseData.id, label: responseData.name, selected: true }], 'value', 'label', false);
 
@@ -106,3 +115,88 @@ document.getElementById('ingredientForm').addEventListener('submit', async funct
 
 });
 
+
+let idCount = 0
+//fonction creation de ligne d'input pour les ingredients
+function createIngredientInput(){
+    idCount++
+
+    // Crée une nouvelle div
+    let newDiv = document.createElement("div");
+    newDiv.className = "w-full px-10 grid gap-4 my-4 grid-cols-2 md:grid-cols-3 md:gap-6";
+
+    let selectContainer = document.createElement("div");
+    selectContainer.className = "relative col-span-2 md:col-span-2  mx-auto w-full"
+    newDiv.appendChild(selectContainer);
+
+    let newLabel = document.createElement("label");
+    newLabel.htmlFor = `ingredientName${idCount}`;
+    newLabel.textContent = "Nom de l'ingrédient";
+    newLabel.className = "block mb-2 text-sm font-medium text-white";
+    selectContainer.appendChild(newLabel);
+
+    let selectWrapper = document.createElement("div");
+    selectWrapper.className = "relative"
+    selectContainer.appendChild(selectWrapper);
+
+    let newSelect = document.createElement("select");
+    newSelect.name = "ingredients[]";
+    newSelect.id = `ingredientName${idCount}`;
+    newSelect.className = " border border-gray-300 bg-gray-50  text-gray-900 text-sm rounded-lg  focus:outline-teal-700 block w-full p-2.5 transition-all ";
+    newSelect.required = true;
+    selectWrapper.appendChild(newSelect);
+
+    let defaultOption = document.createElement('option');
+    defaultOption.selected = true;
+    newSelect.appendChild(defaultOption);
+
+    for (let category in ingredients) {
+        let optgroup = document.createElement('optgroup');
+        optgroup.label = category;
+
+        // Parcourir tous les ingrédients dans une catégorie spécifique
+        for (let j = 0; j < ingredients[category].length; j++) {
+            let option = document.createElement('option');
+            option.value = ingredients[category][j].dataValues.id;
+            option.textContent = ingredients[category][j].dataValues.name;
+            optgroup.appendChild(option);
+        }
+
+        newSelect.appendChild(optgroup);
+    }
+
+    let quantityContainer = document.createElement('div');
+    quantityContainer.className = "relative col-span-1  mx-auto w-full "
+    newDiv.appendChild(quantityContainer);
+
+    let label = document.createElement('label');
+    label.setAttribute('for', `quantity${idCount}`); 
+    label.textContent = "Quantitée";
+    label.className = "block mb-2 text-sm font-medium text-teal-50";
+    quantityContainer.appendChild(label);
+
+    let input = document.createElement('input');
+    input.type = "number";
+    input.name = "quantity[]";
+    input.id = `quantity${idCount}`;  // Remplacez 'counter' par le nombre approprié
+    input.className = "border w-full border-gray-300  bg-gray-50  text-gray-900 text-sm rounded-lg  focus:outline-teal-700 block  p-2.5 transition-all";  // Vous devrez gérer la logique des erreurs en JavaScript
+    input.value = 1;
+    input.min = 0.01;
+    input.step = 0.01;
+    input.required = true;
+    quantityContainer.appendChild(input);
+
+    document.getElementById('ingredientStepInputs').appendChild(newDiv)
+
+    choicesLaunch(newSelect)
+}
+
+
+//bouton pour ajouter une ligne d'inputs d'ingrédient
+document.getElementById('createInputBtn').addEventListener('click', () => {
+    createIngredientInput();
+}) 
+
+for (let i = 0; i < nmbrInput; i++) {
+		createIngredientInput()
+}

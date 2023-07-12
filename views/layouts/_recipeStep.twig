@@ -23,6 +23,10 @@
 					<div class="relative col-span-1 md:col-span-2 max-w-2xl mx-auto w-full md:px-10">
 						<label for="details" class="block mb-2 text-sm font-medium text-teal-50 ">Détails</label>
 						<textarea id="details" name="details" class="py-3 px-4 block w-full border border-gray-300 {% if errors.details %} ring-2 ring-red-500 bg-red-100 {% else %}  bg-gray-50 {% endif %}  rounded-md text-sm focus:outline-teal-700 " rows="6">{% if post %}{{post.details}}{% endif %}</textarea>
+							
+								
+							
+						
 						{% if errors.details %}
 							<div class="absolute right-0 flex items-center pr-3 pointer-events-none top-10 ">
 								<svg class="w-5 h-5 text-red-500" width="16" height="16" fill="currentColor" viewbox="0 0 16 16" aria-hidden="true">
@@ -34,56 +38,19 @@
 					</div>
 
 					
-					<div class="bg-teal-900 rounded-lg md:col-span-2 p-5 md:p-10  grid gap-4 my-4 grid-cols-2 md:grid-cols-3 md:gap-6">
-						<h3 class="text-3xl font-bold text-center text-amber-400 mb-4 md:mb-10 col-span-2 md:col-span-6">Ingrédients</h3>
+					<div id="ingredientStepInputs" class="bg-teal-900 rounded-lg md:col-span-2 py-5 flex flex-col justify-center items-center ">
+						<h3 class="text-3xl font-bold text-center text-amber-400 mb-4 md:mb-10 ">Ingrédients</h3>
+						<button id="createInputBtn" type="button" class="py-1 px-3 rounded-md border border-transparent bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all ">
+							<span class="flex pb-1 items-center justify-center text-5xl">
+								+
+							</span>
+						</button>
 
+						<!--ligne d'ingrédients -->
+						
 
-						<div class="relative col-span-2 md:col-span-2  mx-auto w-full  ">
-							<label for="ingredientName" class="block   mb-2 text-sm font-medium text-white">Nom de l'ingrédient
-							</label>
-							<div class="relative">
-								<select id="ingredientName" name="ingredientName" class="border border-gray-300 {% if errors.ingredientName %} ring-2 ring-red-500 bg-red-100 {% else %}  bg-gray-50 {% endif %}  text-gray-900 text-sm rounded-lg  focus:outline-teal-700 block w-full p-2.5 transition-all ">
-									{% if post %}
-										<option selected value="{{post.ingredientName}}">{{post.ingredientName}}</option>
-									{% else %}
-										<option selected></option>
-									{% endif %}
-									{% for categoryName, ingredients in ingredients %}
-										<optgroup label="{{ categoryName|capitalize }}">
-											{% for ingredient in ingredients %}
-												<option value="{{ ingredient.id }}">{{ ingredient.name|capitalize }}</option>
-											{% endfor %}
-										</optgroup>
-									{% endfor %}
-								</select>
-								{% if errors.ingredientName %}
-									<div class="absolute inset-y-0 right-0 flex items-center pr-8 pointer-events-none">
-										<svg class="w-4 h-4 text-red-500" width="16" height="16" fill="currentColor" viewbox="0 0 16 16" aria-hidden="true">
-											<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
-										</svg>
-									</div>
-								{% endif %}
-							</div>
-							{% if errors.ingredientName %}
-								<p class="mt-2 text-sm text-red-600">{{errors.ingredientName}}</p>
-							{% endif %}
-						</div>
-
-						<div class="relative col-span-1  mx-auto w-full ">
-							<label for="quantity" class="block mb-2 text-sm font-medium text-teal-50 ">Quantitée</label>
-							<input type="number" name="quantity" id="quantity" class="border w-full border-gray-300 {% if errors.quantity %} ring-2 ring-red-500 bg-red-100 {% else %}  bg-gray-50 {% endif %}  text-gray-900 text-sm rounded-lg  focus:outline-teal-700 block  p-2.5 transition-all" {% if post %} value="{{post.quantity}}" {% else %} value="1" {% endif %} min="1" required>
-							{% if errors.quantity %}
-								<div class="absolute right-0 flex items-center pr-3 pointer-events-none top-10 ">
-									<svg class="w-5 h-5 text-red-500" width="16" height="16" fill="currentColor" viewbox="0 0 16 16" aria-hidden="true">
-										<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
-									</svg>
-								</div>
-								<p class="mt-2 text-red-500">{{errors.quantity}}</p>
-							{% endif %}
-						</div>
 
 					</div>
-
 
 					<div class="col-span-1 mt-4 text-center md:col-span-2 flex justify-center gap-5">
 						<button type="submit" name="action" value="next" class="item-center text-black bg-amber-400 hover:bg-yellow-400 focus:ring-4 focus:outline-none focus:ring-cyan-300  shadow-lg shadow-amber-500/50  font-medium rounded-md text-lg px-5 py-2.5 text-center mr-2 mb-2">Etape suivante</button>
@@ -96,3 +63,24 @@
 		</div>
 	</div>
 </div>
+
+{% if post %}
+
+{% endif %}
+
+
+<script>
+	let ingredients = {{ ingredients | json_encode }}
+	{% if nmbrInputs %}
+		let nmbrInput = {{nmbrInputs}}
+	{% endif %}
+
+	{% if post %}
+		let post = {{ post | json_encode }}
+	{% endif %}
+
+	{% if errors.ingredients %}
+		let errors = {{ errors.ingredients | json_encode }}
+		console.log(errors);
+	{% endif %}
+</script>

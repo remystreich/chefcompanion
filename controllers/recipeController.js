@@ -42,8 +42,8 @@ exports.validateAndCreateRecipe = async (req) => {
 };
 
 exports.validateAndCreateStep =async (req)=> {
-    let errors= {};
-    const { title, details} = req.body;
+    let errors = { ingredients: [] };
+    const { title, details, ingredients, quantity} = req.body;
     const step_number = req.params.step;
     const recipe_id = req.params.recipeId;
 
@@ -62,11 +62,24 @@ exports.validateAndCreateStep =async (req)=> {
         });
     }
 
-    if (Object.keys(errors).length == 0) {
-        await newStep.save();
-        let ingredient = await ingredientModel.findByPk(ingredientResult.id) ///////////////////////////////////////////////////////////////////////
-        newStep.addIngredient(ingredient, { through: { quantity: 1 } });
-    } else {
-        return errors
-    }
+   // Validate ingredients
+   const ingredientObjects = [];
+   for (let i = 0; i < ingredients.length; i++) {
+       let ingredient = await ingredientModel.findByPk(ingredients[i]);
+       if (!ingredient) {
+           errors.ingredients[i] = `Cet ingrédient n'existe pas en base.`;
+       } else {
+            errors.ingredients[i] = null
+           ingredientObjects.push({ ingredient, quantity: quantity[i] });
+       }
+   }
+
+   if (errors.ingredients.some(error => error !== null) || Object.keys(errors).length > 1) {
+       return errors;
+   } else {
+       await newStep.save();
+       for (let elem of ingredientObjects) {
+           await newStep.addIngredient(elem.ingredient, { through: { quantity: elem.quantity } });
+       }
+   }
 };

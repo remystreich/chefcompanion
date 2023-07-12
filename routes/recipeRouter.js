@@ -67,12 +67,13 @@ recipeRouter.post('/addRecipe', authguard, upload.single('photo'), async (req, r
 recipeRouter.get('/addRecipe/:step/:recipeId', authguard, async (req, res) => {
     try {
        const ingredients = await ingredientController.findAndSortIngredient(req);
-       
         res.render('templates/addRecipe.twig', {
             step: req.params.step,
             recipeId: req.params.recipeId,
-            ingredients
+            ingredients,
+            
         });
+        
     } catch (error) {
         console.log(error);
         res.json(error)
@@ -83,6 +84,7 @@ recipeRouter.get('/addRecipe/:step/:recipeId', authguard, async (req, res) => {
 recipeRouter.post('/addStep/:step/:recipeId', authguard, async (req, res) => {
     try {
         console.log(req.body);
+        
         let errors = await recipeController.validateAndCreateStep(req);
         if (errors) {
             throw errors
@@ -96,11 +98,14 @@ recipeRouter.post('/addStep/:step/:recipeId', authguard, async (req, res) => {
         }
     } catch (error) {
         console.log(error);
+        const ingredients = await ingredientController.findAndSortIngredient(req);
         res.render('templates/addRecipe.twig', {
             errors: error,
             post: req.body,
             step: req.params.step,
             recipeId: req.params.recipeId,
+            ingredients,
+            nmbrInputs: req.body.ingredients.length
         });
     }
 });
