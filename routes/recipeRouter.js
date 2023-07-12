@@ -71,7 +71,7 @@ recipeRouter.get('/addRecipe/:step/:recipeId', authguard, async (req, res) => {
             step: req.params.step,
             recipeId: req.params.recipeId,
             ingredients,
-            
+
         });
         
     } catch (error) {
@@ -105,7 +105,7 @@ recipeRouter.post('/addStep/:step/:recipeId', authguard, async (req, res) => {
             step: req.params.step,
             recipeId: req.params.recipeId,
             ingredients,
-            nmbrInputs: req.body.ingredients.length
+            
         });
     }
 });

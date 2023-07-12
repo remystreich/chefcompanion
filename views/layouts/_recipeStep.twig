@@ -71,17 +71,12 @@
 
 <script>
 	let ingredients = {{ ingredients | json_encode }}
-	{% if nmbrInputs %}
-		let nmbrInput = {{nmbrInputs}}
-	{% endif %}
+
 
 	{% if post %}
 		let post = {{ post | json_encode }}
-		console.log(post.ingredients);
+		console.log(post);
 	{% endif %}
 
-	{% if errors.ingredients %}
-		let errors = {{ errors.ingredients | json_encode }}
-		console.log(errors);
-	{% endif %}
+	
 </script>

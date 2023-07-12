@@ -8,9 +8,9 @@
 
 //initialiser le select avec choices.js
 function choicesLaunch(elem) {
-        new Choices(elem, {
-            allowHTML: true
-        });
+    new Choices(elem, {
+        allowHTML: true
+    });
 }
 
 
@@ -118,12 +118,12 @@ document.getElementById('ingredientForm').addEventListener('submit', async funct
 
 let idCount = 0
 //fonction creation de ligne d'input pour les ingredients
-function createIngredientInput(i){
+function createIngredientInput(i) {
     idCount++
 
     // Crée une nouvelle div
     let newDiv = document.createElement("div");
-    newDiv.className = "w-full px-10 grid gap-4 my-4 grid-cols-2 md:grid-cols-3 md:gap-6";
+    newDiv.className = "py-5 px-10 grid gap-4 my-4 grid-cols-2 md:grid-cols-4 md:gap-6  border-t  border-gray-800  ";
 
     let selectContainer = document.createElement("div");
     selectContainer.className = "relative col-span-2 md:col-span-2  mx-auto w-full"
@@ -153,25 +153,25 @@ function createIngredientInput(i){
     let defaultOption = document.createElement('option');
     defaultOption.selected = true;
 
-    if (typeof post !== 'undefined') {
-        defaultOption.value = i
+    if (i >= 0) {
+        defaultOption.value = post.ingredients[i]
         let ingredientName = null;
         for (let category in ingredients) {
-           
+
             for (let j = 0; j < ingredients[category].length; j++) {
-              
-                if (ingredients[category][j].dataValues.id == i) {
+
+                if (ingredients[category][j].dataValues.id == post.ingredients[i]) {
                     ingredientName = ingredients[category][j].dataValues.name;
                     break;
                 }
             }
             if (ingredientName) break;
         }
-    
-        defaultOption.textContent = ingredientName || "" ;
+
+        defaultOption.textContent = ingredientName || "";
     }
     else {
-        defaultOption.textContent =""
+        defaultOption.textContent = ""
     }
     defaultCategory.appendChild(defaultOption);
 
@@ -196,7 +196,7 @@ function createIngredientInput(i){
     newDiv.appendChild(quantityContainer);
 
     let label = document.createElement('label');
-    label.setAttribute('for', `quantity${idCount}`); 
+    label.setAttribute('for', `quantity${idCount}`);
     label.textContent = "Quantitée";
     label.className = "block mb-2 text-sm font-medium text-teal-50";
     quantityContainer.appendChild(label);
@@ -206,11 +206,26 @@ function createIngredientInput(i){
     input.name = "quantity[]";
     input.id = `quantity${idCount}`;  // Remplacez 'counter' par le nombre approprié
     input.className = "border w-full border-gray-300  bg-gray-50  text-gray-900 text-sm rounded-lg  focus:outline-teal-700 block  p-2.5 transition-all";  // Vous devrez gérer la logique des erreurs en JavaScript
-    input.value = 1;
+
     input.min = 0.01;
     input.step = 0.01;
     input.required = true;
+
+    if (i >= 0) {
+        input.value = post.quantity[i]
+    }
+    else {
+        input.value = 0;
+    }
     quantityContainer.appendChild(input);
+
+    var deleteBtn = document.createElement("button");
+    deleteBtn.innerText = "Supprimer";
+    deleteBtn.className = " col-span-1 mt-6 md:mx-7  py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border-2 border-red-200 font-semibold text-red-500 hover:text-white hover:bg-red-500 hover:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-200 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800 "
+    deleteBtn.addEventListener("click", function () {
+        this.parentNode.remove();
+    });
+    newDiv.appendChild(deleteBtn);
 
     document.getElementById('ingredientStepInputs').appendChild(newDiv)
 
@@ -221,8 +236,9 @@ function createIngredientInput(i){
 //bouton pour ajouter une ligne d'inputs d'ingrédient
 document.getElementById('createInputBtn').addEventListener('click', () => {
     createIngredientInput();
-}) 
+})
 
 for (let i = 0; i < post.ingredients.length; i++) {
-		createIngredientInput(post.ingredients[i]);
+    createIngredientInput(i);
+
 }
