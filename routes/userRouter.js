@@ -9,7 +9,9 @@ const path = require('path');
 //afficher register
 userRouter.get('/register', async (req, res) => {
     try {
-        res.render('templates/register.twig')
+        res.render('templates/register.twig', {
+            authenticate: 'register'
+        })
     } catch (error) {
         console.log(error);
         res.json(error)
@@ -32,7 +34,8 @@ userRouter.post('/register', upload.single('photo'), async (req, res) => {
         }
         res.render('templates/register.twig', {
             errors: error,
-            post: req.body
+            post: req.body,
+            authenticate: 'register'
         }
         )
     }
@@ -41,7 +44,9 @@ userRouter.post('/register', upload.single('photo'), async (req, res) => {
 //afficher login
 userRouter.get('/login', async (req, res) => {
     try {
-        res.render('templates/login.twig');
+        res.render('templates/login.twig',{
+            authenticate: 'login'
+        });
     } catch (error) {
         console.log(error);
         res.json(error);
@@ -58,7 +63,8 @@ userRouter.post('/login', async (req, res) => {
         console.log(error);
         res.render('templates/login.twig', {
             errors: error,
-            post: req.body
+            post: req.body,
+            authenticate: 'login',
         });
     }
 });

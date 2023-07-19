@@ -1,4 +1,6 @@
+const IngredientModel = require('../models/IngredientModel');
 const ingredientModel = require('../models/IngredientModel');
+const stepIngredientModel = require('../models/Step_IngredientModel'); //
 const { Sequelize } = require('sequelize'); // Make sure to import Sequelize
 
 
@@ -64,4 +66,22 @@ exports.findAndSortIngredient = async (req) => {
         categories[categoryName].push(ingredient);
     }
     return categories;
+}
+
+exports.deleteIngredient = async (req) => {
+    try {
+        const ingredientId = req.params.id;
+        const usedIngredient = await stepIngredientModel.findOne({
+            where: {ingredientId}
+        })
+
+        if(usedIngredient) {
+            throw new Error('Cet ingrédient est utilisé dans au moins une fiche technique et ne peut pas etre supprimé')
+        }
+
+        const ingredient = await IngredientModel.findByPk(ingredientId);
+        await ingredient.destroy();
+    } catch (error) {
+        return error
+    }
 }

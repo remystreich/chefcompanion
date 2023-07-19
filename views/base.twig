@@ -9,23 +9,30 @@
 		<link rel="stylesheet" href="/styles/choices.min.css"/> {% block head %}{% endblock %}
 
 		</head>
-		<body class="bg-teal-100">
+		<body class="bg-cyan-950">
 
 			{% include "./layouts/_background.twig" %}
 
-			{% block header %}
-				{% include "./layouts/_header.twig" %}
-			{% endblock %}
+			<div class="flex w-full">
+				{% if user %}
+					{% include "./layouts/_sidebar.twig" %}
+				{% endif %}
 
-			{% if user %}
-				{% include "./layouts/_sidebar.twig" %}
-			{% endif %}
+				<div class="w-full">
+					{% block header %}
+						{% include "./layouts/_header.twig" %}
+					{% endblock %}
+
+					{% block main %}{% endblock %}
+
+					{% block footer %}{% endblock %}
+				</div>
+
+			</div>
+
 
 			{% include "./layouts/_addIngredient.twig" %}
 
-			{% block main %}{% endblock %}
-
-			{% block footer %}{% endblock %}
 
 			<script src="/scripts/choices.min.js"></script>
 			<script src="/dist/preline.js"></script>

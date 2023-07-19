@@ -1,9 +1,8 @@
 <div id="ingredient-modal" class="hs-overlay hidden w-full h-full fixed top-0 left-0 z-[60] overflow-x-hidden overflow-y-auto">
-	<div>iavzcazc</div>
 	<div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3.5rem)] flex items-center">
-		<div class="flex flex-col bg-gray-800 border shadow-sm rounded-xl ">
+		<div class="flex flex-col bg-white border shadow-sm rounded-xl ">
 			<div class="flex justify-between items-center py-3 px-4 border-b ">
-				<h3 class="font-bold text-teal-50 ">
+				<h3 class="font-bold text-blue-600 font-serif text-3xl pl-6">
 					Nouvel ingrédient
 				</h3>
 				<button type="button" class="hs-dropdown-toggle inline-flex flex-shrink-0 justify-center items-center h-8 w-8 rounded-md text-gray-500 hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-white transition-all text-sm " data-hs-overlay="#ingredient-modal">
@@ -18,16 +17,16 @@
 				<form  class=" grid gap-4 my-4 grid-cols-2  md:gap-6" id="ingredientForm">
 
 					<div class="relative col-span-2  mx-auto w-full ">
-						<label for="name" class="block mb-2 text-sm font-medium text-teal-50 ">Nom</label>
-						<input type="text" name="name" id="name" class="border border-gray-300  bg-gray-50 text-gray-900 text-sm rounded-lg focus:outline-teal-700 block w-full p-2.5 transition-all " placeholder="Nom de l'ingrédient" required>
+						<label for="name" class="block mb-2 text-sm font-medium text-cyan-950 ">Nom</label>
+						<input type="text" name="name" id="name" class="border border-gray-300  bg-gray-50 text-gray-900 text-sm rounded-lg focus:outline-blue-500 block w-full p-2.5 transition-all " placeholder="Nom de l'ingrédient" required>
 						<div id="errorName"></div>
 					</div>
 
 					<div class="relative col-span-2   mx-auto w-full  ">
-						<label for="type" class="block  col-span-1 mb-2 text-sm font-medium text-white">Catégorie
+						<label for="type" class="block  col-span-1 mb-2 text-sm font-medium text-cyan-950">Catégorie
 						</label>
 						<div class="relative">
-							<select id="type" name="type" class="border border-gray-300  text-gray-900 text-sm rounded-lg  focus:outline-teal-700 block w-full p-2.5 transition-all ">
+							<select id="type" name="type" class="border border-gray-300 bg-gray-50 text-gray-900 text-sm rounded-lg  focus:outline-teal-700 block w-full p-2.5 transition-all ">
 								<option value="legumerie">Légumerie</option>
 								<option value="boucherie">Boucherie</option>
 								<option value="poissonnerie">Poissonnerie</option>
@@ -39,16 +38,16 @@
 					</div>
 
 					<div class="relative col-span-1  mx-auto w-full ">
-						<label for="price" class="block mb-2 text-sm font-medium text-teal-50 ">Prix €</label>
-						<input type="number" name="price" id="price" class="border w-full border-gray-300   text-gray-900 text-sm rounded-lg  focus:outline-teal-700 block  p-2.5 transition-all" placeholder="Nombre" min="1" required>
+						<label for="price" class="block mb-2 text-sm font-medium text-cyan-950 ">Prix €</label>
+						<input type="number" name="price" id="price" class="border w-full border-gray-300 bg-gray-50  text-gray-900 text-sm rounded-lg  focus:outline-blue-500 block  p-2.5 transition-all" placeholder="Nombre" min="1" required>
 					</div>
 
 
 					<div class="relative col-span-1  mx-auto w-full ">
-						<label for="unit_mesure" class="block col-span-1 mb-2 text-sm font-medium text-white ml-1">Unité de mesure
+						<label for="unit_mesure" class="block col-span-1 mb-2 text-sm font-medium text-cyan-950 ml-1">Unité de mesure
 						</label>
 						<div class="relative">
-							<select id="unit_mesure" name="unit_mesure" class="border border-gray-300   text-gray-900 text-sm rounded-lg  focus:outline-teal-700 block w-full p-2.5 transition-all ">
+							<select id="unit_mesure" name="unit_mesure" class="border border-gray-300  bg-gray-50 text-gray-900 text-sm rounded-lg  focus:outline-blue-500 block w-full p-2.5 transition-all ">
 								<option value="kg">Kg</option>
 								<option value="g">g</option>
 								<option value="l">l</option>
@@ -59,10 +58,8 @@
 						<div id="errorUM2"></div>
 					</div>
 
-					<div class="flex justify-end items-center gap-x-2 py-3 px-4  col-span-2">
-						<button id="closeModalButton" type="button" class="hs-dropdown-toggle py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm " data-hs-overlay="#ingredient-modal">
-							Close
-						</button>
+					<div class="flex justify-center items-center gap-x-2 py-3 px-4  col-span-2">
+						
 						<button  class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800" href="#">
 							Save changes
 						</button>

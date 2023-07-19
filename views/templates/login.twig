@@ -9,14 +9,14 @@
 {% block main %}
 
 	<div class="  mx-auto px-6  sm:max-w-2xl md:max-w-3xl md:px-8 lg:max-w-5xl xl:max-w-7xl xl:px-32 relative md:pt-32 pb-32 pt-12">
-		<div class="block rounded-lg bg-teal-800 bg-opacity-90 px-6  shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)]  md:py-4 md:px-4">
+		<div class="block rounded-lg bg-white bg-opacity-80 px-6 shadow-sm shadow-gray-100  md:py-4 md:px-4">
 			<div class="max-w-2xl px-4 py-8 mx-auto lg:py-10">
-				<h2 class="mb-4 text-5xl font-bold text-amber-400 text-center ">Login</h2>
+				<h2 class="mb-4 text-5xl font-bold font-serif text-blue-600 text-center ">Login</h2>
 				<form method="POST" action="/login">
 					<div class="grid gap-4 mb-4 sm:grid-cols-2 sm:gap-6 sm:mb-5">
 						<div class="col-span-2 relative">
-							<label for="email" class="block mb-2 text-sm font-medium text-teal-50 ">Adresse mail</label>
-							<input type="text" name="email" id="email" class="border border-gray-300 {% if errors.email %} ring-2 ring-red-500 bg-red-100 {% else %}  bg-teal-50 {% endif %}  text-gray-800 text-sm rounded-lg focus:outline-teal-700  block w-full p-2.5 " {% if post %} value="{{post.email}}" {% endif %} required>
+							<label for="email" class="block mb-2 text-sm font-medium ">Adresse mail</label>
+							<input type="text" name="email" id="email" class="border border-gray-300 {% if errors.email %} ring-2 ring-red-500 bg-red-100  {% endif %}  text-gray-800 text-sm rounded-lg focus:outline-blue-500  block w-full p-2.5 " {% if post %} value="{{post.email}}" {% endif %} required>
 							{% if errors.email %}
 								<div class="absolute top-10 right-0 flex items-center pointer-events-none pr-3 ">
 									<svg class="h-5 w-5 text-red-500" width="16" height="16" fill="currentColor" viewbox="0 0 16 16" aria-hidden="true">
@@ -28,8 +28,8 @@
 
 						</div>
 						<div class="col-span-2 relative">
-							<label for="password" class="block mb-2 text-sm font-medium text-teal-50 ">Mot de passe</label>
-							<input type="password" id="password" name="password" class="border border-gray-300 {% if errors.password %} ring-2 ring-red-500 bg-red-100 {% else %}  bg-teal-50 {% endif %}  text-gray-800 text-sm rounded-lg focus:outline-teal-700  block w-full p-2.5 " required>
+							<label for="password" class="block mb-2 text-sm font-medium  ">Mot de passe</label>
+							<input type="password" id="password" name="password" class="border border-gray-300 {% if errors.password %} ring-2 ring-red-500 bg-red-100 {% endif %}  text-gray-800 text-sm rounded-lg focus:outline-blue-500 block w-full p-2.5 " required>
 							{% if errors.password %}
 								<div class="absolute top-10 right-0 flex items-center pointer-events-none pr-3 ">
 									<svg class="h-5 w-5 text-red-500" width="16" height="16" fill="currentColor" viewbox="0 0 16 16" aria-hidden="true">
@@ -40,12 +40,12 @@
 							{% endif %}
 						</div>
 						<div class="col-span-2 text-center">
-							<button type="submit" class="item-center text-gray-800 bg-amber-400 hover:bg-yellow-400  focus:ring-4 focus:outline-none focus:ring-amber-400  shadow-sm shadow-amber-400  font-medium rounded-md text-lg px-5 py-2.5 text-center mr-2 mb-2">Valider</button>
+							<button type="submit" class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm">Valider</button>
 						</div>
 					</div>
-					<p class="text-sm font-light text-teal-50  text-center">
+					<p class="text-sm font-light text-cyan-950  text-center">
 						Vous n'avez pas de compte?
-						<a href="/register" class="font-medium text-amber-400 hover:underline ">Inscription</a>
+						<a href="/register" class="font-medium text-blue-500 hover:underline ">Inscription</a>
 					</p>
 				</form>
 			</div>

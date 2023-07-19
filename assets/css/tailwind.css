@@ -1,3 +1,15 @@
+@font-face {
+    font-family: 'montserrat';
+    src: url(../font/Montserrat/Montserrat-VariableFont_wght.ttf) format("opentype");
+}
+
+@font-face {
+    font-family: 'playfair';
+    src: url(../font/Playfair_Display/PlayfairDisplay-VariableFont_wght.ttf) format("opentype");
+}
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+

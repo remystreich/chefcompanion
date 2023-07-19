@@ -123,7 +123,7 @@ function createIngredientInput(i) {
 
     // Crée une nouvelle div
     let newDiv = document.createElement("div");
-    newDiv.className = "py-5 px-10 grid gap-4 my-4 grid-cols-2 md:grid-cols-4 md:gap-6  border-t  border-gray-800  ";
+    newDiv.className = "py-7 px-2 md:px-10 mx-1 md:mx-4  grid gap-4  grid-cols-2 md:grid-cols-4   border-t  border-gray-200  ";
 
     let selectContainer = document.createElement("div");
     selectContainer.className = "relative col-span-2 md:col-span-2  mx-auto w-full"
@@ -132,7 +132,7 @@ function createIngredientInput(i) {
     let newLabel = document.createElement("label");
     newLabel.htmlFor = `ingredientName${idCount}`;
     newLabel.textContent = "Nom de l'ingrédient";
-    newLabel.className = "block mb-2 text-sm font-medium text-white";
+    newLabel.className = "block mb-2 text-sm font-medium text-cyan-950";
     selectContainer.appendChild(newLabel);
 
     let selectWrapper = document.createElement("div");
@@ -142,7 +142,7 @@ function createIngredientInput(i) {
     let newSelect = document.createElement("select");
     newSelect.name = "ingredients[]";
     newSelect.id = `ingredientName${idCount}`;
-    newSelect.className = " border border-gray-300 bg-gray-50  text-gray-900 text-sm rounded-lg  focus:outline-teal-700 block w-full p-2.5 transition-all ";
+    newSelect.className = " border border-gray-300  text-gray-900 text-sm rounded-lg  focus:outline-blue-500 block w-full p-2.5 transition-all ";
     newSelect.required = true;
     selectWrapper.appendChild(newSelect);
 
@@ -175,7 +175,7 @@ function createIngredientInput(i) {
     }
     defaultCategory.appendChild(defaultOption);
 
-
+    let unitMesure;
     for (let category in ingredients) {
         let optgroup = document.createElement('optgroup');
         optgroup.label = category;
@@ -184,7 +184,8 @@ function createIngredientInput(i) {
         for (let j = 0; j < ingredients[category].length; j++) {
             let option = document.createElement('option');
             option.value = ingredients[category][j].dataValues.id;
-            option.textContent = ingredients[category][j].dataValues.name;
+            option.textContent = ingredients[category][j].dataValues.name + ` (${ingredients[category][j].dataValues.unit_mesure} )` ;
+
             optgroup.appendChild(option);
         }
 
@@ -198,14 +199,14 @@ function createIngredientInput(i) {
     let label = document.createElement('label');
     label.setAttribute('for', `quantity${idCount}`);
     label.textContent = "Quantitée";
-    label.className = "block mb-2 text-sm font-medium text-teal-50";
+    label.className = "block mb-2 text-sm font-medium text-cyan-950";
     quantityContainer.appendChild(label);
 
     let input = document.createElement('input');
     input.type = "number";
     input.name = "quantity[]";
     input.id = `quantity${idCount}`;  // Remplacez 'counter' par le nombre approprié
-    input.className = "border w-full border-gray-300  bg-gray-50  text-gray-900 text-sm rounded-lg  focus:outline-teal-700 block  p-2.5 transition-all";  // Vous devrez gérer la logique des erreurs en JavaScript
+    input.className = "border w-full border-gray-300   text-gray-900 text-sm rounded-lg  focus:outline-blue-500 block  p-2.5 transition-all";  // Vous devrez gérer la logique des erreurs en JavaScript
 
     input.min = 0.01;
     input.step = 0.01;
@@ -221,7 +222,7 @@ function createIngredientInput(i) {
 
     var deleteBtn = document.createElement("button");
     deleteBtn.innerText = "Supprimer";
-    deleteBtn.className = " col-span-1 mt-6 md:mx-7  py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border-2 border-red-200 font-semibold text-red-500 hover:text-white hover:bg-red-500 hover:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-200 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800 "
+    deleteBtn.className = "mt-4 col-span-1 py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border-2 border-red-200 font-semibold text-red-500 hover:text-white hover:bg-red-500 hover:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-200 focus:ring-offset-2 transition-all text-sm "
     deleteBtn.addEventListener("click", function () {
         this.parentNode.remove();
     });

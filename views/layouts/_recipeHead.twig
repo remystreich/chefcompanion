@@ -1,12 +1,12 @@
-<div class="relative px-6 pt-12 pb-32 mx-auto w-100 sm:max-w-2xl md:max-w-3xl md:px-12 lg:max-w-5xl xl:max-w-7xl xl:px-32 md:pt-32">
-	<div class="block rounded-lg bg-teal-800 bg-opacity-90 px-6  shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)]  md:py-4 md:px-12">
-		<div class="max-w-2xl px-4 py-8 mx-auto lg:py-10">
-			<h2 class="mb-10 text-5xl font-bold text-center text-amber-400 ">Informations principales</h2>
+<div class="relative px-6 pt-12 pb-32 mx-auto    md:px-12  md:pt-14">
+	<div class="block rounded-lg bg-white bg-opacity-80  shadow-sm shadow-gray-100 md:py-4 px-5 md:px-20">
+		<div class=" px-4 py-8 mx-auto lg:py-10">
+			<h2 class="mb-10 text-4xl md:text-5xl font-bold text-center text-blue-600 font-serif">Informations principales</h2>
 			<form method="POST" action="/addRecipe" enctype="multipart/form-data">
 				<div class="grid gap-4 mb-4 md:grid-cols-2 md:gap-6 md:mb-5">
 					<div class="relative col-span-1 md:col-span-2">
-						<label for="title" class="block mb-2 text-sm font-medium text-teal-50 ">Titre de la recette</label>
-						<input type="text" name="title" id="title" class="border border-gray-300 {% if errors.title %} ring-2 ring-red-500 bg-red-100 {% else %}  bg-gray-50 {% endif %}  text-gray-900 text-sm rounded-lg focus:outline-teal-700 block w-full p-2.5 transition-all " {% if post %} value="{{post.title}}" {% else %} {% endif %} required> 
+						<label for="title" class="block mb-2 text-sm font-medium text-cyan-950 ">Titre de la recette</label>
+						<input type="text" name="title" id="title" class="border border-gray-300 {% if errors.title %} ring-2 ring-red-500 bg-red-100 {% endif %}  text-gray-900 text-sm rounded-lg focus:outline-blue-500 block w-full p-2.5 transition-all " {% if post %} value="{{post.title}}" {% else %} {% endif %} required> 
 						{% if errors.title %}
 							<div class="absolute right-0 flex items-center pr-3 pointer-events-none top-10 ">
 								<svg class="w-5 h-5 text-red-500" width="16" height="16" fill="currentColor" viewbox="0 0 16 16" aria-hidden="true">
@@ -18,8 +18,8 @@
 					</div>
 
                     <div class="relative col-span-1 md:col-span-2">
-						<label for="description" class="block mb-2 text-sm font-medium text-teal-50 ">Description</label>
-                        <textarea id="description" name="description" class="py-3 px-4 block w-full border border-gray-300 {% if errors.description %} ring-2 ring-red-500 bg-red-100 {% else %}  bg-gray-50 {% endif %}  rounded-md text-sm focus:outline-teal-700 " rows="3" placeholder="Description..." >{% if post %} {{post.description}}" {% endif %} </textarea>
+						<label for="description" class="block mb-2 text-sm font-medium text-cyan-950 ">Description</label>
+                        <textarea id="description" name="description" class="py-3 px-4 block w-full border border-gray-300 {% if errors.description %} ring-2 ring-red-500 bg-red-100  {% endif %}  rounded-md text-sm focus:outline-blue-500 " rows="3" placeholder="Description..." >{% if post %} {{post.description}}" {% endif %} </textarea>
 						{% if errors.description %}
 							<div class="absolute right-0 flex items-center pr-3 pointer-events-none top-10 ">
 								<svg class="w-5 h-5 text-red-500" width="16" height="16" fill="currentColor" viewbox="0 0 16 16" aria-hidden="true">
@@ -31,8 +31,8 @@
 					</div>
 
 					<div class="relative col-span-1">
-						<label for="guest_number" class="block mb-2 text-sm font-medium text-teal-50 ">Nombre de couverts</label>
-						<input type="number" name="guest_number" id="guest_number" class="border border-gray-300 {% if errors.guest_number %} ring-2 ring-red-500 bg-red-100 {% else %}  bg-gray-50 {% endif %}  text-gray-900 text-sm rounded-lg w-1/2 focus:outline-teal-700 block  p-2.5 transition-all" placeholder="Nombre" {% if post %} value="{{post.guest_number}}" {% else %} value="1" {% endif %} min="1" required>
+						<label for="guest_number" class="block mb-2 text-sm font-medium text-cyan-950 ">Nombre de couverts</label>
+						<input type="number" name="guest_number" id="guest_number" class="border border-gray-300 {% if errors.guest_number %} ring-2 ring-red-500 bg-red-100 {% endif %} w-full text-gray-900 text-sm rounded-lg  focus:outline-blue-500 block  p-2.5 transition-all" placeholder="Nombre" {% if post %} value="{{post.guest_number}}" {% else %} value="1" {% endif %} min="1" required>
 						{% if errors.guest_number %}
 							<div class="absolute right-0 flex items-center pr-3 pointer-events-none top-10 ">
 								<svg class="w-5 h-5 text-red-500" width="16" height="16" fill="currentColor" viewbox="0 0 16 16" aria-hidden="true">
@@ -43,25 +43,10 @@
 						{% endif %}
 					</div>
 
-					
-					<div class="relative col-span-1">
-						<label class="block mb-2 text-sm text-left text-teal-50">Photo du plat
-						</label>
-						<input name="photo" type="file" class="block w-full text-sm transition-all text-teal-50 file:mr-4 file:py-3 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-amber-400 file:test-gray-800 hover:file:bg-yellow-400"/>
-						{% if errors.fileError %}
-							<div class="absolute right-0 flex items-center pr-3 pointer-events-none top-10">
-								<svg class="w-5 h-5 text-red-500" width="16" height="16" fill="currentColor" viewbox="0 0 16 16" aria-hidden="true">
-									<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
-								</svg>
-							</div>
-							<p class="mt-2 text-red-500">{{errors.fileError}}</p>
-						{% endif %}
-					</div>
-
 					<div>
-						<label for="category" class="block col-span-1 mb-2 text-sm font-medium text-white">Catégorie </label>
+						<label for="category" class="block col-span-1 mb-2 text-sm font-medium text-cyan-950">Catégorie </label>
 						<div class="relative">
-							<select id="category" name="category" class="border border-gray-300 {% if errors.category %} ring-2 ring-red-500 bg-red-100 {% else %}  bg-gray-50 {% endif %}  text-gray-900 text-sm rounded-lg  focus:outline-teal-700 block w-full p-2.5 transition-all ">
+							<select id="category" name="category" class="border border-gray-300 {% if errors.category %} ring-2 ring-red-500 bg-red-100  {% endif %}  text-gray-900 text-sm rounded-lg  focus:outline-blue-500 block w-full p-2.5 transition-all ">
 								{% if post %}
 									<option selected value="{{post.category}}">{{post.category}}</option>
 								{% endif %}
@@ -83,14 +68,32 @@
 						{% endif %}
 					</div>
 
+					
+					<div class="relative col-span-1">
+						<label class="block mb-2 text-sm text-left font-medium text-cyan-950">Photo du plat
+						</label>
+						<input name="photo" type="file" class="block w-full text-sm transition-all text-cyan-950 file:mr-4 file:py-3 file:px-4 file:rounded-md file:border-0 file:text-sm file:text-white file:font-semibold file:bg-blue-500 file:test-gray-800 hover:file:bg-blue-600"/>
+						{% if errors.fileError %}
+							<div class="absolute right-0 flex items-center pr-3 pointer-events-none top-10">
+								<svg class="w-5 h-5 text-red-500" width="16" height="16" fill="currentColor" viewbox="0 0 16 16" aria-hidden="true">
+									<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+								</svg>
+							</div>
+							<p class="mt-2 text-red-500">{{errors.fileError}}</p>
+						{% endif %}
+					</div>
+
+					
+
 					<div class="flex items-end justify-center col-span-1 pb-2 hs-tooltip">
-						<input type="checkbox"  id="status" name="status" class="hs-tooltip-toggle relative shrink-0 w-[3.25rem] h-7 bg-teal-50 checked:bg-none checked:bg-amber-400  border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 border border-transparent ring-1 ring-teal-50 focus:border-amber-400 focus:ring-amber-500 ring-offset-white focus:outline-none appearance-none
-																												  before:inline-block before:w-6 before:h-6 before:bg-gray-300 checked:before:bg-teal-700 before:translate-x-0 checked:before:translate-x-full before:shadow before:rounded-full before:transform before:ring-0 before:transition before:ease-in-out before:duration-200 ">
-						<label for="status" class="pb-1 ml-3 text-sm text-teal-50">Partager la fiche?</label>
+						<input type="checkbox"  id="status" name="status" class="relative shrink-0 w-[4.25rem] h-9 bg-gray-100 checked:bg-none checked:bg-blue-500 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 border border-transparent ring-1 ring-transparent focus:border-blue-500 focus:ring-blue-500 ring-offset-white focus:outline-none appearance-none 
+
+  before:inline-block before:w-8 before:h-8 before:bg-white checked:before:bg-blue-200 before:translate-x-0 checked:before:translate-x-full before:shadow before:rounded-full before:transform before:ring-0 before:transition before:ease-in-out before:duration-200">
+						<label for="status" class="pb-1 ml-3 text-sm text-cyan-950">Partager la fiche?</label>
 					</div>
 
 					<div class="col-span-1 mt-4 text-center md:col-span-2">
-						<button type="submit" class="item-center text-black bg-amber-400 hover:bg-yellow-400 focus:ring-4 focus:outline-none focus:ring-cyan-300  shadow-lg shadow-amber-500/50  font-medium rounded-md text-lg px-5 py-2.5 text-center mr-2 mb-2">Suivant</button>
+						<button type="submit" class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm">Suivant</button>
 					</div>
 
 				</div>
