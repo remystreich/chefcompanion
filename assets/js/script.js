@@ -4,37 +4,35 @@
 
 document.getElementById('ingredientForm').addEventListener('submit', async function (event) {
     event.preventDefault();
-
     const formData = new FormData(this);
     const data = {};
-
+    let url = this.getAttribute('action');
+    
+   
+    let method = url!= null ? 'PUT' : 'POST';
+   
     // Convertir FormData en objet JSON
     for (let [key, value] of formData.entries()) {
         data[key] = value;
     }
 
     try {
-        const response = await fetch('/addIngredient', {
-            method: 'POST',
+        const response = await fetch(url || '/addIngredient', {
+            method: method,
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(data),
         });
+        
 
         if (!response.ok) {
             const errorData = await response.json();
             throw errorData.error
         }
         
-        const responseData = await response.json();
-     
-       
-
-        //afficher le succes dans une alert et fermer la modal
-        alert(responseData.message);
-        document.getElementById('closeModalButton').click();
-
+        window.location.reload();
+        
     } catch (error) {
         console.log(error);
 
@@ -84,3 +82,20 @@ document.getElementById('ingredientForm').addEventListener('submit', async funct
 
 });
 
+document.querySelectorAll('.myEditBtn').forEach(function (button) {
+    button.addEventListener('click', function (){
+        let ingredient = JSON.parse(this.getAttribute('dataIngredient')).dataValues;
+        console.log(ingredient);
+        document.getElementById('modalTitle').innerHTML = "Modifier "+ capitalize(ingredient.name) 
+        document.getElementById('name').value = capitalize(ingredient.name) 
+        document.getElementById('price').value = ingredient.price
+        document.getElementById('type').value = ingredient.type
+        document.getElementById('unit_mesure').value = ingredient.unit_mesure
+        document.getElementById('ingredientForm').setAttribute('action', '/updateIngredient/' + ingredient.id )
+    })
+})
+
+
+function capitalize(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}

@@ -1,0 +1,74 @@
+{% extends "../base.twig" %}
+
+{% block head %}
+
+	<title>Liste des fiches</title>
+
+{% endblock %}
+<!--TODO auteur et likes -->
+{% block main %}
+	<main class="my-10 md:mr-8">
+		{% for recipe in recipeList %}
+			<a href="/recipeDetails/{{recipe.id}}">
+				<div class="bg-white border rounded-xl shadow-sm shadow-gray-100 sm:flex m-4 md:max-h-80 md:h-80 hover:bg-blue-100">
+					<div class="flex relative w-full rounded-t-xl overflow-hidden  sm:rounded-l-xl sm:max-w-[15rem] md:rounded-tr-none md:max-w-xs items-center justify-center">
+						<img class="p-2  object-cover" {% if recipe.photo %} src="/uploads/{{recipe.photo}}" {% else %} src="/img/nophoto.svg" {% endif %} alt="Image Description">
+					</div>
+					<div class="flex flex-wrap w-full">
+						<div class="p-4 flex flex-col w-full h-full sm:p-7">
+							<div class="flex justify-between w-full">
+								<h3 class="text-2xl font-bold text-gray-800 font-serif ">{{recipe.title|capitalize}}</h3>
+								<div>
+									<p class="text-gray-600">{{ recipe.guest_number }}
+										couverts</p>
+									<p class="font-bold mt-2">{{recipe.category|capitalize}}</p>
+								</div>
+							</div>
+							<p class="mt-1 text-gray-800 ">
+								{{recipe.description}}
+							</p>
+							{% if recipe.status == true %}
+								<div class="mt-5 sm:mt-auto">
+									<p class="text-xs text-amber-500 text-right">
+										Recette partagée
+									</p>
+								</div>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			</a>
+		{% endfor %}
+
+		<nav class="flex flex-wrap items-center justify-center space-x-2 mt-5 ">
+
+			{% if page > 1  %}
+				<a class="text-white hover:text-blue-600 p-4 inline-flex items-center gap-2 rounded-md order-1" href="?page={{ page - 1 }}">
+					<span aria-hidden="true">«</span>
+					<span>Précédent</span>
+				</a>
+			{% endif %}
+			<div class="flex order-3 w-full md items-center justify-center md:order-2 md:w-auto">
+				{% for  i in 1..totalPages %}
+					{% if i == page %}
+						<span class="w-10 h-10 bg-blue-500 text-white p-4 inline-flex items-center justify-center text-sm font-medium rounded-full" aria-current="page">
+							{{ i }}
+						</span>
+					{% else %}
+						<a class="w-10 h-10 text-gray-300 hover:text-blue-500 p-4 inline-flex items-center text-sm font-medium rounded-full " href="?page={{ i }}">
+							{{ i }}
+						</a>
+					{% endif %}
+				{% endfor %}
+			</div>
+
+			{% if page < totalPages %}
+				<a class="text-white hover:text-blue-600 p-4 inline-flex items-center gap-2 rounded-md order-2 md:order-3 " href="?page={{ page + 1 }}">
+					<span>Suivant</span>
+					<span aria-hidden="true">»</span>
+				</a>
+			{% endif %}
+
+		</nav>
+	</main>
+{% endblock %}

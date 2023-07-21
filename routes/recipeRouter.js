@@ -2,12 +2,12 @@ const recipeRouter = require('express').Router();
 const authguard = require("../services/authguard");
 const recipeController = require('../controllers/recipeController');
 const ingredientController = require('../controllers/ingredientController')
-const ingredientModel = require('../models/IngredientModel')
+
 const upload = require('../services/multer');
 const fs = require('fs');
 const path = require('path');
 
-//landingPage
+//landingPage TODO
 recipeRouter.get('/', async (req, res) => {
     try {
         res.render('templates/landing.twig', {
@@ -19,7 +19,7 @@ recipeRouter.get('/', async (req, res) => {
     }
 });
 
-//affichage dashboard
+//affichage dashboard TODO
 recipeRouter.get('/dashboard', authguard, async (req, res) => {
     try {
         res.render('templates/dashboard.twig')
@@ -66,14 +66,14 @@ recipeRouter.post('/addRecipe', authguard, upload.single('photo'), async (req, r
 //affichage form d'étape
 recipeRouter.get('/addRecipe/:step/:recipeId', authguard, async (req, res) => {
     try {
-       const ingredients = await ingredientController.findAndSortIngredient(req);
+        const ingredients = await ingredientController.findAndSortIngredient(req);
         res.render('templates/addRecipe.twig', {
             step: req.params.step,
             recipeId: req.params.recipeId,
             ingredients,
 
         });
-        
+
     } catch (error) {
         console.log(error);
         res.json(error)
@@ -83,8 +83,6 @@ recipeRouter.get('/addRecipe/:step/:recipeId', authguard, async (req, res) => {
 //traiter formulaire etape
 recipeRouter.post('/addStep/:step/:recipeId', authguard, async (req, res) => {
     try {
-        console.log(req.body);
-        
         let errors = await recipeController.validateAndCreateStep(req);
         if (errors) {
             throw errors
@@ -98,16 +96,35 @@ recipeRouter.post('/addStep/:step/:recipeId', authguard, async (req, res) => {
         }
     } catch (error) {
         console.log(error);
-        const ingredients = await ingredientController.findAndSortIngredient(req);
-        res.render('templates/addRecipe.twig', {
-            errors: error,
-            post: req.body,
-            step: req.params.step,
-            recipeId: req.params.recipeId,
-            ingredients,
-            
-        });
+        res.redirect('back')
     }
 });
+
+//affichage liste des recettes
+recipeRouter.get('/recipeList', authguard, async (req, res) => {
+    try {
+        const { recipeList, page, totalPages } = await recipeController.getRecipes(req);
+        
+        res.render('templates/recipeList.twig', {
+            recipeList,
+            page,
+            totalPages
+        })
+
+    } catch (error) {
+        console.log(error);
+        res.json(error)
+    }
+})
+
+//affichage détails une fiche
+recipeRouter.get('/recipeDetails/', async (req, res) => {
+    try {
+        
+    } catch (error) {
+        console.log(error);
+        res.json(error)
+    }
+})
 
 module.exports = recipeRouter;

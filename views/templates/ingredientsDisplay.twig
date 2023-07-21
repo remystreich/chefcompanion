@@ -70,7 +70,7 @@
 											{{ingredient.price}}
 										</td>
 										<td class="px-6 py-4 whitespace-nowrap  text-sm font-medium flex gap-4 justify-center">
-											<button data-hs-overlay="#ingredient-modal" class="text-blue-500 hover:text-blue-700" href="/updateIngredient/{{ingredient.id}}">Modifier</button>
+											<button data-hs-overlay="#ingredient-modal" class="myEditBtn text-blue-500 hover:text-blue-700 " dataIngredient="{{ ingredient | json_encode | escape('html_attr') }}">Modifier</button>
 											<a class="text-red-500 hover:text-red-700" href="/deleteIngredient/{{ingredient.id}}">Supprimer</a>
 										</td>
 									</tr>
@@ -85,6 +85,6 @@
 
 	<script>
 		let ingredients = {{ ingredients | json_encode }}
-console.log(ingredients);
+
 	</script>
 {% endblock %}

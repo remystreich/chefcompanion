@@ -1,12 +1,12 @@
 const recipeModel = require('../models/RecipeModel');
 const stepModel = require('../models/StepModel');
-const ingredientModel = require ('../models/IngredientModel')
+const ingredientModel = require('../models/IngredientModel')
 const ingredientController = require('./ingredientController');
 
 exports.validateAndCreateRecipe = async (req) => {
     let errors = {};
 
-    if (req.multerError){
+    if (req.multerError) {
         errors.fileError = "Veuillez entrer un fichier valide"
     }
 
@@ -19,7 +19,7 @@ exports.validateAndCreateRecipe = async (req) => {
         title,
         description,
         guest_number,
-        photo, 
+        photo,
         category,
         status,
         user_id,
@@ -41,9 +41,9 @@ exports.validateAndCreateRecipe = async (req) => {
     return { errors: null, id: savedRecipe.id };
 };
 
-exports.validateAndCreateStep =async (req)=> {
+exports.validateAndCreateStep = async (req) => {
     let errors = { ingredients: [] };
-    const { title, details, ingredients, quantity} = req.body;
+    const { title, details, ingredients, quantity } = req.body;
     const step_number = req.params.step;
     const recipe_id = req.params.recipeId;
 
@@ -62,24 +62,44 @@ exports.validateAndCreateStep =async (req)=> {
         });
     }
 
-   // Validate ingredients
-   const ingredientObjects = [];
-   for (let i = 0; i < ingredients.length; i++) {
-       let ingredient = await ingredientModel.findByPk(ingredients[i]);
-       if (!ingredient) {
-           errors.ingredients[i] = `Cet ingrédient n'existe pas en base.`;
-       } else {
+    // Validate ingredients
+    const ingredientObjects = [];
+    for (let i = 0; i < ingredients.length; i++) {
+        let ingredient = await ingredientModel.findByPk(ingredients[i]);
+        if (!ingredient) {
+            errors.ingredients[i] = `Cet ingrédient n'existe pas en base.`;
+        } else {
             errors.ingredients[i] = null
-           ingredientObjects.push({ ingredient, quantity: quantity[i] });
-       }
-   }
+            ingredientObjects.push({ ingredient, quantity: quantity[i] });
+        }
+    }
 
-   if (errors.ingredients.some(error => error !== null) || Object.keys(errors).length > 1) {
-       return errors;
-   } else {
-       await newStep.save();
-       for (let elem of ingredientObjects) {
-           await newStep.addIngredient(elem.ingredient, { through: { quantity: elem.quantity } });
-       }
-   }
+    if (errors.ingredients.some(error => error !== null) || Object.keys(errors).length > 1) {
+        return errors;
+    } else {
+        await newStep.save();
+        for (let elem of ingredientObjects) {
+            await newStep.addIngredient(elem.ingredient, { through: { quantity: elem.quantity } });
+        }
+    }
 };
+
+exports.getRecipes = async (req) => {
+    let page = req.query.page && req.query.page > 0 ? parseInt(req.query.page) : 1;
+    const limit = 6
+    const offset = (page - 1) * limit;
+    const recipes = await recipeModel.findAndCountAll({
+        offset: offset,
+        limit: limit,
+        where: {
+            user_id: req.session.user.id //TODO recup recette aimées
+        },
+    })
+    const totalPages = Math.ceil(recipes.count / limit);
+    return {
+        recipeList: recipes.rows,
+        page,
+        totalPages
+    };
+    
+}

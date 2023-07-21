@@ -2,16 +2,16 @@ const ingredientRouter = require('express').Router();
 const authguard = require("../services/authguard");
 const ingredientController = require('../controllers/ingredientController');
 const { json } = require('sequelize');
+const IngredientModel = require('../models/IngredientModel');
 
 //ajout d'ingredient
 ingredientRouter.post('/addIngredient', authguard,  async (req, res) => {
     try {
-        
         let result = await ingredientController.validateAndCreateIngredient(req)
+        console.log(result);
         if (result.errors) {
             throw result.errors
         }
-        
         res.json({ 
             message: "Ingredient ajouté avec succès.",
             name: result.name,
@@ -63,21 +63,17 @@ ingredientRouter.get('/deleteIngredient/:id', authguard, async (req,res)=> {
 })
 
 //modifier un ingrédient
-ingredientRouter.get('/updateIngredient/:id' , authguard, async (req,res)=>{
+ingredientRouter.put('/updateIngredient/:id' , authguard, async (req,res)=>{
+   
     try {
-        let company = await companyModel.findOne({ _id: req.params.id })       
-        let update = req.body     
-        if (req.body.password) {
-            update.password = bcrypt.hashSync(req.body.password, parseInt(process.env.SALT) );
-        }
-        else{
-            update.password = company.password
-        }                                               
-        await company.updateOne(update)                                           
-        res.redirect('/dashboard')
+        let errors = await ingredientController.validateAndUpdateIngredient(req)
+        if (errors) {
+            throw errors
+        }                              
+        res.send('Modification réussie')
     } catch (error) {
         console.log(error)
-        res.send(error)
+        res.status(500).json({error}); 
     }
 })
 

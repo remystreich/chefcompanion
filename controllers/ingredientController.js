@@ -35,15 +35,11 @@ exports.validateAndCreateIngredient = async (req) => {
         return {
             errors: null,
             id: savedIngredient.id,
-            name : savedIngredient.name,
+            name: savedIngredient.name,
         };
     } catch (saveError) {
-        if (saveError instanceof Sequelize.UniqueConstraintError) {
-            errors['name'] = 'Un ingrédient avec ce nom existe déjà.';
-            return { errors, id: null };
-        } else {
-            throw saveError; // re-throw the error if it's not a UniqueConstraintError
-        }
+        errors['name'] = 'Un ingrédient avec ce nom existe déjà.';
+        throw errors;
     }
 };
 
@@ -72,10 +68,10 @@ exports.deleteIngredient = async (req) => {
     try {
         const ingredientId = req.params.id;
         const usedIngredient = await stepIngredientModel.findOne({
-            where: {ingredientId}
+            where: { ingredientId }
         })
 
-        if(usedIngredient) {
+        if (usedIngredient) {
             throw new Error('Cet ingrédient est utilisé dans au moins une fiche technique et ne peut pas etre supprimé')
         }
 
@@ -84,4 +80,39 @@ exports.deleteIngredient = async (req) => {
     } catch (error) {
         return error
     }
+}
+
+exports.validateAndUpdateIngredient = async (req) => {
+    let errors = {};
+    
+    const { name, type, unit_mesure, price } = req.body;
+
+    let updateIngredient = await IngredientModel.findByPk(req.params.id);
+    updateIngredient.name = name;
+    updateIngredient.type = type;
+    updateIngredient.unit_mesure = unit_mesure;
+    updateIngredient.price = price;
+
+    try {
+    await updateIngredient.validate();
+    
+    } catch (validationError) {
+        validationError.errors.forEach((err) => {
+            errors[err.path] = err.message;
+        });
+    }
+
+    if (Object.keys(errors).length > 0) {
+        return errors;
+    }
+
+    try {
+        await updateIngredient.save();
+    } catch (saveError) {
+        if (saveError instanceof Sequelize.UniqueConstraintError) {
+            return { name: 'Un ingrédient avec ce nom existe déjà.' };
+        }
+        throw saveError; 
+    }
+
 }
