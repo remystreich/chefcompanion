@@ -1,7 +1,7 @@
 <header class="flex flex-wrap sm:justify-start sm:flex-nowrap z-50 w-full  text-sm py-4 ">
 	<nav class="max-w-[85rem] w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between" aria-label="Global">
 		<div class="flex items-center justify-between">
-		{% if authenticate %}
+		{% if authenticate or user is not defined %}
 			<a class="inline-flex items-center gap-x-2 text-xl font-semibold " href="#">
 				<img class="w-10 h-auto" src="/img/logo_cuisinet.png" alt="Logo">
 				Cuisinet

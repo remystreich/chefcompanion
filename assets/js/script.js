@@ -99,3 +99,4 @@ document.querySelectorAll('.myEditBtn').forEach(function (button) {
 function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
+

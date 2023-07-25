@@ -104,7 +104,7 @@ recipeRouter.post('/addStep/:step/:recipeId', authguard, async (req, res) => {
 recipeRouter.get('/recipeList', authguard, async (req, res) => {
     try {
         const { recipeList, page, totalPages } = await recipeController.getRecipes(req);
-        
+       
         res.render('templates/recipeList.twig', {
             recipeList,
             page,
@@ -118,12 +118,46 @@ recipeRouter.get('/recipeList', authguard, async (req, res) => {
 })
 
 //affichage détails une fiche
-recipeRouter.get('/recipeDetails/', async (req, res) => {
+recipeRouter.get('/recipeDetails/:id', async (req, res) => {
     try {
-        
+        const {recipe, author, stepCount, ingredientSteps} = await recipeController.getRecipe(req);
+        console.log(author);
+        res.render('templates/recipeDetails.twig',{
+            recipe,
+            author,
+            steps: recipe.Steps,
+            stepCount,
+            ingredientSteps,
+            user: req.session.user
+        })
+
     } catch (error) {
         console.log(error);
         res.json(error)
+    }
+})
+
+//supprimer une fiche
+recipeRouter.get('/deleteRecipe/:id', authguard, async (req, res) => {
+    try {
+        const error = await recipeController.deleteRecipe(req)
+        if (error) {
+            throw new Error(error)
+        }
+        res.redirect('/recipeList')
+    } catch (error) {
+        console.log(error);
+        req.session.error = error.message
+        res.redirect('back')
+    }
+})
+
+//update fiche display
+recipeRouter.get('updateRecipe/:id', authguard, async (req,res) => {
+    try {
+        
+    } catch (error) {
+        
     }
 })
 

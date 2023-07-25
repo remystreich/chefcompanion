@@ -1,0 +1,24 @@
+{% extends "../base.twig" %}
+
+{% block head %}
+
+	<title>Mise à jour fiche</title>
+
+{% endblock %}
+
+{% block main %}
+
+	{% if recipeId %}
+		{% include "../layouts/_recipeStep.twig" %}
+	{% else %}
+		{% include "../layouts/_recipeHead.twig" %}
+	{% endif %}
+
+{% endblock %}
+
+
+{% if recipeId %}
+	{% block script %}
+			<script src="/js/addStepScript.js"></script>
+	{% endblock %}
+{% endif %}

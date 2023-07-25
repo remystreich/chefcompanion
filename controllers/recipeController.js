@@ -1,8 +1,11 @@
 const recipeModel = require('../models/RecipeModel');
 const stepModel = require('../models/StepModel');
 const ingredientModel = require('../models/IngredientModel')
+const userModel = require('../models/UserModel')
 const ingredientController = require('./ingredientController');
 
+
+//créer fiche
 exports.validateAndCreateRecipe = async (req) => {
     let errors = {};
 
@@ -41,6 +44,7 @@ exports.validateAndCreateRecipe = async (req) => {
     return { errors: null, id: savedRecipe.id };
 };
 
+//créer étapes
 exports.validateAndCreateStep = async (req) => {
     let errors = { ingredients: [] };
     const { title, details, ingredients, quantity } = req.body;
@@ -84,6 +88,7 @@ exports.validateAndCreateStep = async (req) => {
     }
 };
 
+//recuperer liste fiches
 exports.getRecipes = async (req) => {
     let page = req.query.page && req.query.page > 0 ? parseInt(req.query.page) : 1;
     const limit = 6
@@ -101,5 +106,63 @@ exports.getRecipes = async (req) => {
         page,
         totalPages
     };
-    
+
 }
+
+//récupérer UNE fiche
+exports.getRecipe = async (req) => {
+    try {
+        const recipe = await recipeModel.findByPk(req.params.id, {
+            include: [{
+                model: stepModel,
+                as: 'Steps',
+                include: [{
+                    model: ingredientModel,
+                    as: 'Ingredients',
+                    through: { attributes: ['quantity'] }
+                }]
+            }]
+        });
+
+        const allSteps = recipe.Steps;
+        let allIngredients = allSteps.flatMap(step => step.Ingredients);
+
+        let uniqueIngredients = Object.values(allIngredients.reduce((result, ingredient) => {
+            result[ingredient.id] = ingredient;
+            return result;
+        }, {}));
+
+        // Construire la structure de données
+        let ingredientSteps = uniqueIngredients.map(ingredient => {
+            let steps = allSteps.map(step => {
+                let ingredientInStep = step.Ingredients.find(i => i.id === ingredient.id);
+                return ingredientInStep ? ingredientInStep.Step_Ingredient.quantity : 0; 
+            });
+            return {
+                ingredient: ingredient.name, 
+                price: ingredient.price,
+                unit_mesure: ingredient.unit_mesure,
+                steps: steps
+            };
+        });
+
+
+        const author = await userModel.findByPk(recipe.user_id);
+        const stepCount = await stepModel.count({ where: { recipe_id: req.params.id } });
+
+        return { recipe, author, stepCount, ingredientSteps };
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+//supprimer fiche
+exports.deleteRecipe= async (req)=>{
+    try {
+        await recipeModel.destroy({ where: { id: req.params.id } });
+    } catch (error) {
+        return error
+    }
+}
+
+//
