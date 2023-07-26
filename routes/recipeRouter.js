@@ -199,8 +199,10 @@ recipeRouter.get('/updateStep/:id', authguard, async(req,res) => {
     try {
         const ingredients = await ingredientController.findAndSortIngredient(req);
         const step = await recipeController.getStep(req)
-        console.log(step.Ingredients);
-        
+        if(step.error){
+            console.log(step.error);
+            throw step.error
+        }
         res.render('templates/updateRecipe.twig',{
             step,
             ingredients,
@@ -209,7 +211,7 @@ recipeRouter.get('/updateStep/:id', authguard, async(req,res) => {
         })
     } catch (error) {
         console.log(error);
-        res.json(error)
+        res.json({error: error.message})
     }
 })
 
@@ -236,5 +238,20 @@ recipeRouter.post('/updateStep/:id', authguard, async(req,res) =>{
     }
 })
 
+//delete step
+recipeRouter.get('/deleteStep/:id', authguard, async(req,res) => {
+    try {
+        const error = await recipeController.deleteStep(req)
+        if (error) {
+            throw new Error(error)
+        }
+        res.redirect('back')
+
+    } catch (error) {
+        console.log(error);
+        req.session.error = error.message
+        res.redirect('back')
+    }
+})
 
 module.exports = recipeRouter;

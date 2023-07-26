@@ -165,24 +165,52 @@
 		<!--liste étapes -->
 		{% for step in steps %}
 			{% if author.id == user.id  %}
-				<a href="/updateStep/{{step.id}}" class="rounded-lg border col-span-3 md:col-span-6 grid grid-cols-4">
-					<div class="bg-blue-500 rounded-l-lg py-2 flex flex-col text-white font-bold font-serif justify-center items-center col-span-1 ">
-						<p>
-							{{ step.step_number }}
-						</p>
-						<p>
-							{{ step.title|capitalize }}
-						</p>
-					</div>
+				<div class="col-span-3 md:col-span-6 relative">
+					<a href="/updateStep/{{step.id}}" class="rounded-lg border  grid grid-cols-4 bg-white hover:bg-blue-200">
+						<div class="bg-blue-600 bg-opacity-70 rounded-l-lg py-2 flex flex-col text-white font-bold font-serif justify-center items-center col-span-1 ">
+							<p>
+								{{ step.step_number }}
+							</p>
+							<p>
+								{{ step.title|capitalize }}
+							</p>
+						</div>
 
-					<div class="bg-white col-span-3 p-2">
-						<p>{{ step.details }}</p>
+						<div class=" col-span-3 p-2">
+							<p class="pr-9">{{ step.details }}</p>
+
+						</div>
+					</a>
+
+					<span class="text-red-500 text-2xl absolute right-1 top-1/2 transform -translate-y-1/2 hover:text-red-600 " data-hs-overlay="#deleteConfirmationModalStep{{step.id}}">
+						<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewbox="0 0 448 512" fill="currentcolor"><path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z"/></svg>
+					</span>
+				</div>
+
+				<!--Modal de confirmation de suppression -->
+				<div id="deleteConfirmationModalStep{{step.id}}" class="hs-overlay hidden w-full h-full fixed top-0 left-0 z-[60] overflow-x-hidden overflow-y-auto">
+					<div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3.5rem)] flex items-center">
+						<div class="flex flex-col bg-red-300 border border-red-500 shadow-sm rounded-xl ">
+							<div class="p-4 overflow-y-auto">
+								<p class="mt-1 text-red-950 ">
+									Êtes vous sur de vouloir supprimer cette etape?
+								</p>
+							</div>
+							<div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-red-500 ">
+								<button type="button" class="hs-dropdown-toggle py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm " data-hs-overlay="#deleteConfirmationModal">
+									Annuler
+								</button>
+								<a href="/deleteStep/{{step.id}}" class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-red-500 text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm ">
+									Valider
+								</a>
+							</div>
+						</div>
 					</div>
-				</a>
+				</div>
 
 			{% else %}
 				<div class="rounded-lg border col-span-3 md:col-span-6 grid grid-cols-4">
-					<div class="bg-blue-500 rounded-l-lg py-2 flex flex-col text-white font-bold font-serif justify-center items-center col-span-1 ">
+					<div class="bg-blue-500  rounded-l-lg py-2 flex flex-col text-white font-bold font-serif justify-center items-center col-span-1 ">
 						<p>
 							{{ step.step_number }}
 						</p>
@@ -191,7 +219,7 @@
 						</p>
 					</div>
 
-					<div class="bg-white col-span-3 p-2">
+					<div class="bg-white col-span-3 p-2 rounded-r">
 						<p>{{ step.details }}</p>
 					</div>
 				</div>

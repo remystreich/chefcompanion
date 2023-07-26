@@ -4,7 +4,7 @@ const ingredientModel = require('../models/IngredientModel')
 const userModel = require('../models/UserModel')
 const ingredientController = require('./ingredientController');
 const fs = require('fs');
-
+const Sequelize = require('sequelize');
 
 //verif isOwner?
 const isOwner = async (req) => {
@@ -12,7 +12,26 @@ const isOwner = async (req) => {
     if (!recipe) {
         throw new Error('Vous devez être le propriétaire pour apporter des modifications');
     }
+    return recipe;
 };
+
+const isOwnerStep = async (req) => {
+    const step = await stepModel.findOne({
+        where: { id: req.params.id },
+        include: {
+            model: recipeModel,
+            as: 'Recipe', // utilisez l'alias que vous avez défini lors de la création de l'association
+
+        }
+    });
+    // Vérifie si l'étape a été trouvée et si l'utilisateur est le propriétaire de l'étape
+    if (!step || step.Recipe.user_id !== req.session.userId) { // supposons que req.user.id est l'id de l'utilisateur actuel
+        throw new Error('Vous devez être le propriétaire pour apporter des modifications');
+    }
+
+    return step;
+};
+
 
 
 //créer fiche
@@ -125,6 +144,7 @@ exports.getRecipes = async (req) => {
 exports.getRecipe = async (req) => {
     try {
         const recipe = await recipeModel.findByPk(req.params.id, {
+            subQuery: false,
             include: [{
                 model: stepModel,
                 as: 'Steps',
@@ -133,7 +153,8 @@ exports.getRecipe = async (req) => {
                     as: 'Ingredients',
                     through: { attributes: ['quantity'] }
                 }]
-            }]
+            }],
+            order: [[{ model: stepModel, as: 'Steps' }, 'step_number', 'ASC']],
         });
 
         const allSteps = recipe.Steps;
@@ -172,8 +193,7 @@ exports.getRecipe = async (req) => {
 //supprimer fiche
 exports.deleteRecipe = async (req) => {
     try {
-        await isOwner(req);
-        const recipe = await recipeModel.findByPk(req.params.id);
+        const recipe = await isOwner(req);
         if (recipe.photo) {
             // Supprimer le fichier d'image
             fs.unlink(`assets/uploads/${recipe.photo}`, err => {
@@ -189,7 +209,7 @@ exports.deleteRecipe = async (req) => {
 
 //update fiche
 exports.updateRecipe = async (req) => {
-    await isOwner(req);
+    let updateRecipe = await await isOwner(req);
     let errors = {};
 
     if (req.multerError) {
@@ -199,13 +219,12 @@ exports.updateRecipe = async (req) => {
     const { title, description, guest_number, category, status: rawStatus } = req.body;
     const status = rawStatus === 'on';
 
-    let updateRecipe = await recipeModel.findByPk(req.params.id)
-
     updateRecipe.title = title;
     updateRecipe.description = description;
     updateRecipe.guest_number = guest_number;
     updateRecipe.category = category;
     updateRecipe.status = status;
+
     if (req.file && !req.multerError) {
         if (updateRecipe.photo) {
             // Supprimer le fichier d'image
@@ -233,10 +252,11 @@ exports.updateRecipe = async (req) => {
 
 //update Step
 exports.updateStep = async (req) => {
+    let updateStep = await isOwnerStep(req);
     let errors = { ingredients: [] };
     const { title, details, ingredients, quantity } = req.body;
 
-    let updateStep = await stepModel.findByPk(req.params.id)
+
     updateStep.title = title;
     updateStep.details = details;
 
@@ -275,6 +295,7 @@ exports.updateStep = async (req) => {
 //recuperer une etape
 exports.getStep = async (req) => {
     try {
+        await isOwnerStep(req);
         const step = await stepModel.findByPk(req.params.id, {
             include: [{
                 model: ingredientModel,
@@ -285,6 +306,29 @@ exports.getStep = async (req) => {
         return step
     } catch (error) {
         console.log(error);
+        return { error: error }
     }
 }
 
+//effacer une etape
+exports.deleteStep = async (req) => {
+    try {
+        const step = await isOwnerStep(req);
+        let recipeId = step.Recipe.id;
+        let stepNumber = step.step_number;
+
+        await step.destroy()
+        await stepModel.update({
+            step_number: Sequelize.literal('step_number - 1')
+        }, {
+            where: {
+                recipe_id: recipeId,
+                step_number: {
+                    [Sequelize.Op.gt]: stepNumber
+                }
+            }
+        })
+    } catch (error) {
+        return error
+    }
+}
