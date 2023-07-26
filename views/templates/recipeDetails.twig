@@ -13,7 +13,7 @@
 		<div class="flex flex-col justify-end items-end px-2 mt-14 md:px-10 gap-3 ">
 			<div class="flexgap-4 justify-end">
 				<button type="button" id="deleteButton" class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border-2 border-red-200 font-semibold text-red-500 hover:text-white hover:bg-red-500 hover:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-200 focus:ring-offset-2 transition-all text-sm " data-hs-overlay="#deleteConfirmationModal">Supprimer</button>
-				<a href="updateRecipe/{{recipe.id}}" class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border-2 border-yellow-200 font-semibold text-yellow-500 hover:text-white hover:bg-yellow-500 hover:border-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-200 focus:ring-offset-2 transition-all text-sm ">Modifier</a>
+				<a href="/updateRecipe/{{recipe.id}}" class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border-2 border-yellow-200 font-semibold text-yellow-500 hover:text-white hover:bg-yellow-500 hover:border-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-200 focus:ring-offset-2 transition-all text-sm ">Modifier</a>
 			</div>
 			<p class="text-amber-400 text-sm">Pour modifier une étape cliquez sur son bandeau</p>
 		</div>
@@ -49,7 +49,7 @@
 		</div>
 
 		<div class="col-span-3 md:col-span-1 bg-white border border-cyan-950 flex justify-center items-center rounded-lg flex-wrap p-2">
-			<img {% if recipe.photo %} src="/uploads/{{recipe.photo}}" {% else %} src="/img/nophoto.svg" {% endif %} alt="user photo">
+			<img {% if recipe.photo %} src="/uploads/{{recipe.photo}}" {% else %} src="/img/nophoto.svg" {% endif %} alt="photo du plat">
 		</div>
 
 		<div class="col-span-1 bg-blue-500 flex flex-col justify-center items-center rounded-lg border border-cwhite p-6">
@@ -79,19 +79,19 @@
 		</div>
 
 		<!--Tableau ingrédients-->
-		<div class="col-span-3 md:col-span-6 rounded-lg border border-black border-collapse overflow-x-auto">
-			<table class="w-full table-auto">
-				<thead class="bg-blue-500 border-b border-black">
+		<div class="col-span-3 md:col-span-6 rounded-lg border border-black border-collapse overflow-x-auto ">
+			<table class="w-full min-w-full table-auto ">
+				<thead class="bg-blue-500 border-b border-black min-w-full">
 					<tr class="rounded-lg divide-x divide-black">
-						<th class="rounded-tl-lg " rowspan="2">Ingrédients</th>
-						<th class="border-b border-x border-black" colspan="{{ stepCount }}">Phases essentielles</th>
-						<th rowspan="2">U</th>
-						<th rowspan="2">Total</th>
-						<th class="rounded-tr-lg flex-wrap" rowspan="2">Coût total HT</th>
+						<th class="rounded-tl-lg w-36 px-3" rowspan="2">Ingrédients</th>
+						<th class="border-b border-x border-black " colspan="{{ stepCount }}">Phases essentielles</th>
+						<th rowspan="2" class="px-3">U</th>
+						<th rowspan="2" class="w-28 px-3">Total</th>
+						<th class="rounded-tr-lg w-28 px-3" rowspan="2">Coût total HT</th>
 					</tr>
 					<tr>
 						{% for step in steps %}
-							<th class="border border-black">
+							<th class="border border-black px-4">
 								{{ step.step_number }}
 							</th>
 						{% endfor %}
@@ -165,7 +165,7 @@
 		<!--liste étapes -->
 		{% for step in steps %}
 			{% if author.id == user.id  %}
-				<a href="updateStep/step.id" class="rounded-lg border col-span-3 md:col-span-6 grid grid-cols-4">
+				<a href="/updateStep/{{step.id}}" class="rounded-lg border col-span-3 md:col-span-6 grid grid-cols-4">
 					<div class="bg-blue-500 rounded-l-lg py-2 flex flex-col text-white font-bold font-serif justify-center items-center col-span-1 ">
 						<p>
 							{{ step.step_number }}

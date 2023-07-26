@@ -2,15 +2,20 @@
 	<div class="block rounded-lg bg-white bg-opacity-80   shadow-sm shadow-gray-100 md:py-4 px-5 md:px-20">
 		<div class=" px-4 py-8 mx-auto lg:py-10">
 			<h2 class="mb-10 text-5xl font-bold text-center text-blue-600 font-serif">Étape
-				{{step}}
+				{{stepNmbr}}
+				{% if step %}
+					{{ step.step_number }}
+				{% endif %}
 			</h2>
-			<form method="POST" action="/addStep/{{step}}/{{recipeId}}">
+
+			<form method="POST" {% if step %} action="/updateStep/{{ step.id }}" {% else %} action="/addStep/{{stepNmbr}}/{{recipeId}}" {% endif %}>
+
 				<div class="grid gap-4 mb-4 grid-cols-1 md:grid-cols-2 md:gap-6 md:mb-5 ">
 					<div class="relative col-span-1 md:col-span-2 max-w-2xl mx-auto w-full  md:px-10 ">
 						<label for="title" class="block mb-2 text-sm font-medium text-cyan-950 ">Titre de l'étape</label>
-						<input type="text" name="title" id="title" class="border border-gray-300 {% if errors.title %} ring-2 ring-red-500 bg-red-100 {% endif %}  text-gray-900 text-sm rounded-lg focus:outline-blue-500 block w-full p-2.5 transition-all " {% if post %} value="{{post.title}}" {% else %} {% endif %} placeholder="Titre de l'étape" required>
+						<input type="text" name="title" id="title" class="border border-gray-300 {% if errors.title %} ring-2 ring-red-500 bg-red-100 {% endif %}  text-gray-900 text-sm rounded-lg focus:outline-blue-500 block w-full p-2.5 transition-all " {% if post.title %} value="{{post.title}}" {% elseif step %} value="{{ step.title }}" {% endif %} placeholder="Titre de l'étape" required>
 						{% if errors.title %}
-							<div class="absolute right-0 flex items-center pr-3 pointer-events-none top-10 ">
+							<div class="absolute right-0 flex items-center pr-3 pointer-events-none top-10 md:right-10">
 								<svg class="w-5 h-5 text-red-500" width="16" height="16" fill="currentColor" viewbox="0 0 16 16" aria-hidden="true">
 									<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
 								</svg>
@@ -21,10 +26,11 @@
 
 					<div class="relative col-span-1 md:col-span-2 max-w-2xl mx-auto w-full md:px-10">
 						<label for="details" class="block mb-2 text-sm font-medium text-cyan-950 ">Détails</label>
-						<textarea id="details" name="details" class="py-3 px-4 block w-full border border-gray-300 {% if errors.details %} ring-2 ring-red-500 bg-red-100  {% endif %}  rounded-md text-sm focus:outline-blue-500 " rows="6">{% if post %}{{post.details}}{% endif %}</textarea>
-						
+						<textarea id="details" name="details" class="py-3 px-4 block w-full border border-gray-300 {% if errors.details %} ring-2 ring-red-500 bg-red-100  {% endif %}  rounded-md text-sm focus:outline-blue-500 " rows="6">{% if post.details %}{{post.details}}{% elseif step %}{{ step.details }}{% endif %}</textarea>
+							
+								
 						{% if errors.details %}
-							<div class="absolute right-0 flex items-center pr-3 pointer-events-none top-10 ">
+							<div class="absolute right-0 flex items-center pr-3 pointer-events-none top-10 md:right-10">
 								<svg class="w-5 h-5 text-red-500" width="16" height="16" fill="currentColor" viewbox="0 0 16 16" aria-hidden="true">
 									<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
 								</svg>
@@ -33,28 +39,33 @@
 						{% endif %}
 					</div>
 
-					
+
 					<div id="ingredientStepInputs" class="bg-gray-100 rounded-lg md:col-span-2 py-5 flex flex-col justify-center items-center ">
 						<h3 class="text-3xl font-bold text-center text-blue-500 font-serif mb-4 md:mb-10 ">Ingrédients</h3>
 						<button id="createInputBtn" type="button" class="py-3 px-4 text-3xl inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all ">
-							<svg xmlns="http://www.w3.org/2000/svg" height="1em" fill="currentcolor" viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
+							<svg xmlns="http://www.w3.org/2000/svg" height="1em" fill="currentcolor" viewbox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
 						</button>
 						<p class="text-sm font-light text-cyan-950  text-center my-9">
-						Votre ingrédient d'est pas dans la liste?
-						<button type="button" data-hs-overlay="#ingredient-modal" class="font-medium text-blue-500 hover:underline ">Ajoutez le</button>
-					</p>
+							Votre ingrédient d'est pas dans la liste?
+							<button type="button" data-hs-overlay="#ingredient-modal" class="font-medium text-blue-500 hover:underline ">Ajoutez le</button>
+						</p>
 						<!--ligne d'ingrédients -->
-						
 
 
 					</div>
 
-					<div class="col-span-1 mt-4 text-center md:col-span-2 flex flex-wrap justify-center gap-5 ">
-					<!--TODO bouton etape precedente-->
-						<button type="submit" name="action" value="next" class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm order-2 md:order-1">Etape précédente</button>
-						<button type="submit" name="action" value="end" class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-amber-500 text-white hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-all text-sm order-1 md:order-2">Terminer</button>
-						<button type="submit" name="action" value="next" class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm order-3">Etape suivante</button>
+					<div
+						class="col-span-1 mt-4 text-center md:col-span-2 flex flex-wrap justify-center gap-5 ">
+						<!--TODO bouton etape precedente-->
+						{% if step is not defined%}
+							<button type="submit" name="action" value="next" class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm order-2 md:order-1">Etape précédente</button>
+						{% endif %}
 
+						<button type="submit" name="action" value="end" class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-amber-500 text-white hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-all text-sm order-1 md:order-2">Terminer</button>
+						
+						{% if step is not defined %}
+							<button type="submit" name="action" value="next" class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm order-3">Etape suivante</button>
+						{% endif %}
 					</div>
 
 				</div>
@@ -63,19 +74,22 @@
 	</div>
 </div>
 
-{% if post %}
-
-{% endif %}
-
 
 <script>
-	let ingredients = {{ ingredients | json_encode }}
 
+	let ingredients = {{ ingredients | json_encode }}
 
 	{% if post %}
 		let post = {{ post | json_encode }}
-		console.log(post);
+	{% else %}
+		let post
 	{% endif %}
 
-	
+
+	{% if ingredientStep %}
+		let ingredientStep = {{ ingredientStep }}
+	{% else %}
+		let ingredientStep
+	{% endif %}
+
 </script>

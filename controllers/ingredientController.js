@@ -1,7 +1,14 @@
-const IngredientModel = require('../models/IngredientModel');
 const ingredientModel = require('../models/IngredientModel');
 const stepIngredientModel = require('../models/Step_IngredientModel'); //
 const { Sequelize } = require('sequelize'); // Make sure to import Sequelize
+
+//verif isOwner?
+const isOwner = async (req) => {
+    const ingredient = await ingredientModel.findOne({ where: { id: req.params.id, user_id: req.session.userId } });
+    if (!ingredient) {
+      throw new Error('Vous devez être le propriétaire pour apporter des modifications');
+    }
+  };
 
 
 exports.validateAndCreateIngredient = async (req) => {
@@ -66,6 +73,7 @@ exports.findAndSortIngredient = async (req) => {
 
 exports.deleteIngredient = async (req) => {
     try {
+        await isOwner(req);
         const ingredientId = req.params.id;
         const usedIngredient = await stepIngredientModel.findOne({
             where: { ingredientId }
@@ -75,7 +83,7 @@ exports.deleteIngredient = async (req) => {
             throw new Error('Cet ingrédient est utilisé dans au moins une fiche technique et ne peut pas etre supprimé')
         }
 
-        const ingredient = await IngredientModel.findByPk(ingredientId);
+        const ingredient = await ingredientModel.findByPk(ingredientId);
         await ingredient.destroy();
     } catch (error) {
         return error
@@ -83,11 +91,12 @@ exports.deleteIngredient = async (req) => {
 }
 
 exports.validateAndUpdateIngredient = async (req) => {
+    await isOwner(req);
     let errors = {};
     
     const { name, type, unit_mesure, price } = req.body;
 
-    let updateIngredient = await IngredientModel.findByPk(req.params.id);
+    let updateIngredient = await ingredientModel.findByPk(req.params.id);
     updateIngredient.name = name;
     updateIngredient.type = type;
     updateIngredient.unit_mesure = unit_mesure;

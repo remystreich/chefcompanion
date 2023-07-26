@@ -14,7 +14,6 @@ function choicesLaunch(elem) {
 }
 
 
-
 document.getElementById('ingredientForm').addEventListener('submit', async function (event) {
     event.preventDefault();
 
@@ -153,7 +152,7 @@ function createIngredientInput(i) {
     let defaultOption = document.createElement('option');
     defaultOption.selected = true;
 
-    if (i >= 0) {
+    if (i >= 0 && post) {
         defaultOption.value = post.ingredients[i]
         let ingredientName = null;
         for (let category in ingredients) {
@@ -170,6 +169,25 @@ function createIngredientInput(i) {
 
         defaultOption.textContent = ingredientName || "";
     }
+
+    else if (i >= 0 && ingredientStep) {
+        defaultOption.value = ingredientStep[i].id;
+        let ingredientName = null;
+        for (let category in ingredients) {
+
+            for (let j = 0; j < ingredients[category].length; j++) {
+
+                if (ingredients[category][j].dataValues.id == ingredientStep[i].id) {
+                    ingredientName = ingredients[category][j].dataValues.name;
+                    break;
+                }
+            }
+            if (ingredientName) break;
+        }
+
+        defaultOption.textContent = ingredientName || "";
+    }
+
     else {
         defaultOption.textContent = ""
     }
@@ -212,15 +230,18 @@ function createIngredientInput(i) {
     input.step = 0.01;
     input.required = true;
 
-    if (i >= 0) {
+    if (i >= 0 && post) {
         input.value = post.quantity[i]
+    }
+    else if (i >= 0 && ingredientStep) {
+        input.value = ingredientStep[i].Step_Ingredient.quantity
     }
     else {
         input.value = 0;
     }
     quantityContainer.appendChild(input);
 
-    var deleteBtn = document.createElement("button");
+    let deleteBtn = document.createElement("button");
     deleteBtn.innerText = "Supprimer";
     deleteBtn.className = "mt-4 col-span-1 py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border-2 border-red-200 font-semibold text-red-500 hover:text-white hover:bg-red-500 hover:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-200 focus:ring-offset-2 transition-all text-sm "
     deleteBtn.addEventListener("click", function () {
@@ -239,7 +260,20 @@ document.getElementById('createInputBtn').addEventListener('click', () => {
     createIngredientInput();
 })
 
-for (let i = 0; i < post.ingredients.length; i++) {
-    createIngredientInput(i);
-
+//pour ajouter une ligne d'ingredient en cas d'erreur
+if (post) {
+    for (let i = 0; i < post.ingredients.length; i++) {
+        createIngredientInput(i);
+    }
 }
+
+
+//lignes d'ingredients update
+if (ingredientStep) {
+    for (let i = 0; i < ingredientStep.length; i++) {
+        createIngredientInput(i);
+       
+    }
+}
+
+

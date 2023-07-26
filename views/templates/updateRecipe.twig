@@ -8,7 +8,7 @@
 
 {% block main %}
 
-	{% if recipeId %}
+	{% if step %}
 		{% include "../layouts/_recipeStep.twig" %}
 	{% else %}
 		{% include "../layouts/_recipeHead.twig" %}
@@ -17,7 +17,7 @@
 {% endblock %}
 
 
-{% if recipeId %}
+{% if step %}
 	{% block script %}
 			<script src="/js/addStepScript.js"></script>
 	{% endblock %}

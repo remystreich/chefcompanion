@@ -2,11 +2,16 @@
 	<div class="block rounded-lg bg-white bg-opacity-80  shadow-sm shadow-gray-100 md:py-4 px-5 md:px-20">
 		<div class=" px-4 py-8 mx-auto lg:py-10">
 			<h2 class="mb-10 text-4xl md:text-5xl font-bold text-center text-blue-600 font-serif">Informations principales</h2>
-			<form method="POST" action="/addRecipe" enctype="multipart/form-data">
+			<form method="POST"  {% if recipe %}
+				action="/updateRecipe/{{recipe.id}}"
+			{% else %}
+				action="/addRecipe"
+			{% endif %} enctype="multipart/form-data">
+
 				<div class="grid gap-4 mb-4 md:grid-cols-2 md:gap-6 md:mb-5">
 					<div class="relative col-span-1 md:col-span-2">
 						<label for="title" class="block mb-2 text-sm font-medium text-cyan-950 ">Titre de la recette</label>
-						<input type="text" name="title" id="title" class="border border-gray-300 {% if errors.title %} ring-2 ring-red-500 bg-red-100 {% endif %}  text-gray-900 text-sm rounded-lg focus:outline-blue-500 block w-full p-2.5 transition-all " {% if post %} value="{{post.title}}" {% else %} {% endif %} required> 
+						<input type="text" name="title" id="title" class="border border-gray-300 {% if errors.title %} ring-2 ring-red-500 bg-red-100 {% endif %}  text-gray-900 text-sm rounded-lg focus:outline-blue-500 block w-full p-2.5 transition-all " {% if post.title %} value="{{post.title}}" {% elseif recipe %} value="{{recipe.title}}" {% endif %} required> 
 						{% if errors.title %}
 							<div class="absolute right-0 flex items-center pr-3 pointer-events-none top-10 ">
 								<svg class="w-5 h-5 text-red-500" width="16" height="16" fill="currentColor" viewbox="0 0 16 16" aria-hidden="true">
@@ -19,7 +24,7 @@
 
                     <div class="relative col-span-1 md:col-span-2">
 						<label for="description" class="block mb-2 text-sm font-medium text-cyan-950 ">Description</label>
-                        <textarea id="description" name="description" class="py-3 px-4 block w-full border border-gray-300 {% if errors.description %} ring-2 ring-red-500 bg-red-100  {% endif %}  rounded-md text-sm focus:outline-blue-500 " rows="3" placeholder="Description..." >{% if post %} {{post.description}}" {% endif %} </textarea>
+                        <textarea id="description" name="description" class="py-3 px-4 block w-full border border-gray-300 {% if errors.description %} ring-2 ring-red-500 bg-red-100  {% endif %}  rounded-md text-sm focus:outline-blue-500 " rows="3" placeholder="Description..." >{% if post.description %} {{post.description}}" {% elseif recipe %} {{recipe.description}}  {% endif %} </textarea>
 						{% if errors.description %}
 							<div class="absolute right-0 flex items-center pr-3 pointer-events-none top-10 ">
 								<svg class="w-5 h-5 text-red-500" width="16" height="16" fill="currentColor" viewbox="0 0 16 16" aria-hidden="true">
@@ -32,7 +37,7 @@
 
 					<div class="relative col-span-1">
 						<label for="guest_number" class="block mb-2 text-sm font-medium text-cyan-950 ">Nombre de couverts</label>
-						<input type="number" name="guest_number" id="guest_number" class="border border-gray-300 {% if errors.guest_number %} ring-2 ring-red-500 bg-red-100 {% endif %} w-full text-gray-900 text-sm rounded-lg  focus:outline-blue-500 block  p-2.5 transition-all" placeholder="Nombre" {% if post %} value="{{post.guest_number}}" {% else %} value="1" {% endif %} min="1" required>
+						<input type="number" name="guest_number" id="guest_number" class="border border-gray-300 {% if errors.guest_number %} ring-2 ring-red-500 bg-red-100 {% endif %} w-full text-gray-900 text-sm rounded-lg  focus:outline-blue-500 block  p-2.5 transition-all" placeholder="Nombre" {% if post.guest_number %} value="{{post.guest_number}}" {% elseif recipe %} value="{{recipe.guest_number}}" {% else %} value="1" {% endif %} min="1" required>
 						{% if errors.guest_number %}
 							<div class="absolute right-0 flex items-center pr-3 pointer-events-none top-10 ">
 								<svg class="w-5 h-5 text-red-500" width="16" height="16" fill="currentColor" viewbox="0 0 16 16" aria-hidden="true">
@@ -47,8 +52,10 @@
 						<label for="category" class="block col-span-1 mb-2 text-sm font-medium text-cyan-950">Catégorie </label>
 						<div class="relative">
 							<select id="category" name="category" class="border border-gray-300 {% if errors.category %} ring-2 ring-red-500 bg-red-100  {% endif %}  text-gray-900 text-sm rounded-lg  focus:outline-blue-500 block w-full p-2.5 transition-all ">
-								{% if post %}
+								{% if post.category %}
 									<option selected value="{{post.category}}">{{post.category}}</option>
+									{% elseif recipe %}
+									<option selected value="{{recipe.category}}">{{recipe.category}}</option>
 								{% endif %}
 								<option  value="Entrée">Entrée</option>
 								<option value="Plat">Plat</option>
@@ -84,12 +91,13 @@
 					</div>
 
 					
+					
 
 					<div class="flex items-end justify-center col-span-1 pb-2 hs-tooltip">
-						<input type="checkbox"  id="status" name="status" class="relative shrink-0 w-[4.25rem] h-9 bg-gray-100 checked:bg-none checked:bg-blue-500 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 border border-transparent ring-1 ring-transparent focus:border-blue-500 focus:ring-blue-500 ring-offset-white focus:outline-none appearance-none 
+						<input type="checkbox" {% if recipe.status == true %} checked {% endif %} id="status" name="status" class="relative shrink-0 w-[4.25rem] h-9 bg-gray-100 checked:bg-none checked:bg-blue-500 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 border border-transparent ring-1 ring-transparent focus:border-blue-500 focus:ring-blue-500 ring-offset-white focus:outline-none appearance-none 
 
   before:inline-block before:w-8 before:h-8 before:bg-white checked:before:bg-blue-200 before:translate-x-0 checked:before:translate-x-full before:shadow before:rounded-full before:transform before:ring-0 before:transition before:ease-in-out before:duration-200">
-						<label for="status" class="pb-1 ml-3 text-sm text-cyan-950">Partager la fiche?</label>
+						<label for="status" class="pb-1 ml-3 text-sm text-cyan-950">Partager la fiche? </label>
 					</div>
 
 					<div class="col-span-1 mt-4 text-center md:col-span-2">

@@ -68,7 +68,7 @@ recipeRouter.get('/addRecipe/:step/:recipeId', authguard, async (req, res) => {
     try {
         const ingredients = await ingredientController.findAndSortIngredient(req);
         res.render('templates/addRecipe.twig', {
-            step: req.params.step,
+            stepNmbr: req.params.step,
             recipeId: req.params.recipeId,
             ingredients,
 
@@ -96,7 +96,15 @@ recipeRouter.post('/addStep/:step/:recipeId', authguard, async (req, res) => {
         }
     } catch (error) {
         console.log(error);
-        res.redirect('back')
+        const ingredients = await ingredientController.findAndSortIngredient(req);
+        res.render('templates/addRecipe.twig', {
+            errors: error,
+            post: req.body,
+            stepNmbr: req.params.step,
+            recipeId: req.params.recipeId,
+            ingredients,
+            nmbrInputs: req.body.ingredients.length
+        });
     }
 });
 
@@ -121,7 +129,6 @@ recipeRouter.get('/recipeList', authguard, async (req, res) => {
 recipeRouter.get('/recipeDetails/:id', async (req, res) => {
     try {
         const {recipe, author, stepCount, ingredientSteps} = await recipeController.getRecipe(req);
-        console.log(author);
         res.render('templates/recipeDetails.twig',{
             recipe,
             author,
@@ -153,12 +160,81 @@ recipeRouter.get('/deleteRecipe/:id', authguard, async (req, res) => {
 })
 
 //update fiche display
-recipeRouter.get('updateRecipe/:id', authguard, async (req,res) => {
+recipeRouter.get('/updateRecipe/:id', authguard, async (req,res) => {
     try {
-        
+        const {recipe} = await recipeController.getRecipe(req)
+        res.render('templates/updateRecipe.twig',{
+            recipe: recipe
+        })
     } catch (error) {
-        
+        console.log(error);
+        res.json(error)
     }
 })
+
+//traiter update fiche
+recipeRouter.post('/updateRecipe/:id', authguard, upload.single('photo'), async (req,res) => {
+    try {
+        const result = await recipeController.updateRecipe(req);
+        if (result.errors) {
+            throw result.errors
+        }
+        res.redirect(`/recipeDetails/${req.params.id}`)
+    } catch (error) {
+        console.log(error);
+        if (req.file) {
+            fs.unlink(path.join(req.file.path), err => {
+                if (err) console.error( err);
+            });
+        }
+        res.render('templates/updateRecipe.twig', {
+            errors: error,
+            post: req.body
+        });
+    }
+})
+
+//update step display
+recipeRouter.get('/updateStep/:id', authguard, async(req,res) => {
+    try {
+        const ingredients = await ingredientController.findAndSortIngredient(req);
+        const step = await recipeController.getStep(req)
+        console.log(step.Ingredients);
+        
+        res.render('templates/updateRecipe.twig',{
+            step,
+            ingredients,
+            ingredientStep: JSON.stringify(step.Ingredients)
+            
+        })
+    } catch (error) {
+        console.log(error);
+        res.json(error)
+    }
+})
+
+//traiter update step
+recipeRouter.post('/updateStep/:id', authguard, async(req,res) =>{
+    try {
+        let errors = await recipeController.updateStep(req);
+        if (errors) {
+            throw errors
+        }
+        const step = await recipeController.getStep(req)
+        res.redirect(`/recipeDetails/${step.recipe_id}`)
+    } catch (error) {
+        console.log(error);
+        const ingredients = await ingredientController.findAndSortIngredient(req);
+        res.render('templates/addRecipe.twig', {
+            errors: error,
+            post: req.body,
+            stepNmbr: req.params.step,
+            recipeId: req.params.recipeId,
+            ingredients,
+            nmbrInputs: req.body.ingredients.length
+        });
+    }
+})
+
 
 module.exports = recipeRouter;
