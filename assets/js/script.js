@@ -1,6 +1,5 @@
+
 //gestion du form ajout d'ingredients
-
-
 
 document.getElementById('ingredientForm').addEventListener('submit', async function (event) {
     event.preventDefault();

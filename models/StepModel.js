@@ -54,11 +54,11 @@ const StepModel = sequelize.define('Step', {
     validate: {
       isInt: {
         args: true,
-        msg: "Le nombre de couverts doit être un nombre entier."
+        msg: "Le numero d'etape doit être un nombre entier."
       },
       min: {
         args: [1],
-        msg: "Le nombre de couverts doit être au moins 1."
+        msg: "Le numero d'etape doit être suppérieur à 1."
       },
     },
   },

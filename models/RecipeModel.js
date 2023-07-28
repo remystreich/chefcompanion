@@ -55,7 +55,7 @@ const Recipe = sequelize.define('Recipe', {
       },
       min: {
         args: [1],
-        msg: "Le nombre de couverts doit être au moins 1."
+        msg: "Le nombre de couverts doit être au moins de 1."
       },
     },
   },

@@ -6,7 +6,8 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="stylesheet" href="/css/output.css">
 		<script src="https://kit.fontawesome.com/463c3f4f8a.js" crossorigin="anonymous"></script>
-		<link rel="stylesheet" href="/styles/choices.min.css"/> {% block head %}{% endblock %}
+		<link rel="stylesheet" href="/styles/choices.min.css"/> 
+		{% block head %}{% endblock %}
 
 		</head>
 		<body class="bg-cyan-950">
@@ -36,11 +37,11 @@
 
 			<script src="/scripts/choices.min.js"></script>
 			<script src="/dist/preline.js"></script>
-
+			<script src="https://cdn.jsdelivr.net/npm/@shopify/draggable@1.0.0-beta.11/lib/draggable.bundle.js"></script>
+			<script  src="/js/draggable.js"></script>
 			{% block script %}
 				<script src="/js/script.js"></script>
-
 			{% endblock %}
-
+			
 		</body>
 	</html>

@@ -15,9 +15,9 @@ const isOwner = async (req) => {
     return recipe;
 };
 
-const isOwnerStep = async (req) => {
+const isOwnerStep = async (req, id) => {
     const step = await stepModel.findOne({
-        where: { id: req.params.id },
+        where: { id: id },
         include: {
             model: recipeModel,
             as: 'Recipe', // utilisez l'alias que vous avez défini lors de la création de l'association
@@ -25,10 +25,9 @@ const isOwnerStep = async (req) => {
         }
     });
     // Vérifie si l'étape a été trouvée et si l'utilisateur est le propriétaire de l'étape
-    if (!step || step.Recipe.user_id !== req.session.userId) { // supposons que req.user.id est l'id de l'utilisateur actuel
+    if (!step || step.Recipe.user_id !== req.session.userId) {
         throw new Error('Vous devez être le propriétaire pour apporter des modifications');
     }
-
     return step;
 };
 
@@ -252,7 +251,7 @@ exports.updateRecipe = async (req) => {
 
 //update Step
 exports.updateStep = async (req) => {
-    let updateStep = await isOwnerStep(req);
+    let updateStep = await isOwnerStep(req, req.params.id);
     let errors = { ingredients: [] };
     const { title, details, ingredients, quantity } = req.body;
 
@@ -295,7 +294,7 @@ exports.updateStep = async (req) => {
 //recuperer une etape
 exports.getStep = async (req) => {
     try {
-        await isOwnerStep(req);
+        await isOwnerStep(req, req.params.id);
         const step = await stepModel.findByPk(req.params.id, {
             include: [{
                 model: ingredientModel,
@@ -313,7 +312,7 @@ exports.getStep = async (req) => {
 //effacer une etape
 exports.deleteStep = async (req) => {
     try {
-        const step = await isOwnerStep(req);
+        const step = await isOwnerStep(req, req.params.id);
         let recipeId = step.Recipe.id;
         let stepNumber = step.step_number;
 
@@ -329,6 +328,27 @@ exports.deleteStep = async (req) => {
             }
         })
     } catch (error) {
-        return error
+        throw error
+    }
+}
+
+exports.updateRecipesOrder = async (req) => {
+    try {
+        const newOrder = req.body;
+        //vérifier si les etapes appartiennent bien à l'user, promise effectue toutes les veriffiaction en paralele
+        const ids = Object.keys(newOrder);
+        await Promise.all(ids.map(id => isOwnerStep(req, id)));
+
+        console.log(newOrder);
+        const promises = ids.map(async (id) => {
+            const step_number = newOrder[id];
+            return await stepModel.update({ step_number }, { where: { id } });
+        });
+
+        // Wait for all updates to finish
+        await Promise.all(promises);
+
+    } catch (error) {
+        throw error
     }
 }

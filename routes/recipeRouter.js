@@ -241,16 +241,25 @@ recipeRouter.post('/updateStep/:id', authguard, async(req,res) =>{
 //delete step
 recipeRouter.get('/deleteStep/:id', authguard, async(req,res) => {
     try {
-        const error = await recipeController.deleteStep(req)
-        if (error) {
-            throw new Error(error)
-        }
+        await recipeController.deleteStep(req)
+        
         res.redirect('back')
 
     } catch (error) {
         console.log(error);
         req.session.error = error.message
         res.redirect('back')
+    }
+})
+
+//changer ordre etape
+recipeRouter.put('/updateRecipes', async(req, res) => {
+    try {
+        await recipeController.updateRecipesOrder(req);
+        res.send('Modification réussie')
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error}); 
     }
 })
 
