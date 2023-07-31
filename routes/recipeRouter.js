@@ -227,7 +227,7 @@ recipeRouter.post('/updateStep/:id', authguard, async(req,res) =>{
     } catch (error) {
         console.log(error);
         const ingredients = await ingredientController.findAndSortIngredient(req);
-        res.render('templates/addRecipe.twig', {
+        res.render('templates/updateRecipe.twig', {
             errors: error,
             post: req.body,
             stepNmbr: req.params.step,
@@ -260,6 +260,23 @@ recipeRouter.put('/updateRecipes', async(req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({error}); 
+    }
+});
+
+//ajouter une nouvelle etape 
+recipeRouter.get('/addNewStep/:stepLength/:recipeId', async(req, res) => {
+    try {
+        const ingredients = await ingredientController.findAndSortIngredient(req);
+        let stepLength =  parseInt(req.params.stepLength)+1
+        res.render('templates/updateRecipe.twig', {
+            ingredients,
+            stepLength,
+            recipeId:req.params.recipeId
+
+        });
+    } catch (error) {
+        console.log(error);
+        res.json({error: error.message})
     }
 })
 

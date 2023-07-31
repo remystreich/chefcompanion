@@ -6,9 +6,12 @@
 				{% if step %}
 					{{ step.step_number }}
 				{% endif %}
+				{% if stepLength %}
+					{{stepLength}}
+				{% endif %}
 			</h2>
 
-			<form method="POST" {% if step %} action="/updateStep/{{ step.id }}" {% else %} action="/addStep/{{stepNmbr}}/{{recipeId}}" {% endif %}>
+			<form method="POST" {% if step %} action="/updateStep/{{ step.id }}" {% elseif stepLength %} action="/addStep/{{stepLength}}/{{recipeId}}" {% else %} action="/addStep/{{stepNmbr}}/{{recipeId}}" {% endif %}>
 
 				<div class="grid gap-4 mb-4 grid-cols-1 md:grid-cols-2 md:gap-6 md:mb-5 ">
 					<div class="relative col-span-1 md:col-span-2 max-w-2xl mx-auto w-full  md:px-10 ">
@@ -57,13 +60,13 @@
 					<div
 						class="col-span-1 mt-4 text-center md:col-span-2 flex flex-wrap justify-center gap-5 ">
 						<!--TODO bouton etape precedente-->
-						{% if step is not defined%}
+						{% if step or stepLength is not defined%}
 							<button type="submit" name="action" value="next" class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm order-2 md:order-1">Etape précédente</button>
 						{% endif %}
 
 						<button type="submit" name="action" value="end" class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-amber-500 text-white hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-all text-sm order-1 md:order-2">Terminer</button>
 						
-						{% if step is not defined %}
+						{% if step or stepLength is not defined %}
 							<button type="submit" name="action" value="next" class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm order-3">Etape suivante</button>
 						{% endif %}
 					</div>

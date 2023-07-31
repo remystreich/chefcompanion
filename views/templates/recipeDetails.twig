@@ -3,7 +3,7 @@
 {% block head %}
 
 	<title>{{recipe.title}}</title>
-    
+
 {% endblock %}
 
 {% block main %}
@@ -162,6 +162,7 @@
 				</div>
 			</div>
 		</section>
+
 		<!--liste étapes -->
 		<section class="myDragSection px-2 my-9 md:px-10 ">
 			{% for step in steps %}
@@ -173,7 +174,7 @@
 									{{ step.step_number }}
 								</p>
 								<p>
-									{{ step.title|capitalize }}||{{step.id}}
+									{{ step.title|capitalize }}
 								</p>
 							</div>
 
@@ -225,11 +226,19 @@
 						</div>
 					</div>
 				{% endif %}
-
-
 			{% endfor %}
-
+            {% if author.id == user.id %}
+                <p class="text-sm text-amber-400 my-3">Pour ajouter une nouvelle étape cliquez sur le bouton ci-dessous et donnez lui l'ordre une fois créée.</p>
+                <a href="/addNewStep/{{steps|length}}/{{recipe.id}}" class="rounded-lg border w-full mb-4 flex justify-center items-center text-4xl text-cyan-950 bg-white py-4  hover:bg-blue-200">
+                    <i class="fa-solid fa-plus"></i>
+                </a>
+            {% endif %}
 			{# TODO commentaires #}
 		</section>
 	</main>
+{% endblock %}
+
+{% block script %}
+    <script  src="/js/draggable.js"></script>
+	<script src="/js/script.js"></script>
 {% endblock %}
