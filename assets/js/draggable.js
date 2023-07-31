@@ -31,17 +31,23 @@ sortable.on('sortable:stop', async (evt) => {
     originalElement.classList.remove('bg-blue-200');
     originalElement.classList.add('bg-white');
 
-    const newOrder = await new Promise(resolve => {
-        setTimeout(() => {
-            const order = Array.from(document.querySelectorAll('.myDraggable'))
-                .filter(item => item.id) 
-                .reduce((order, item, index) => {
-                    order[item.id] = index + 1;
-                    return order;
-                }, {});
-            resolve(order);
-        }, 100);
-    });
+    // const newOrder = await new Promise(resolve => {
+    //     setTimeout(() => {
+    //         const newOrder = Array.from(document.querySelectorAll('.myDraggable'))
+    //             .filter(item => item.id && item.classList.contains('draggable--original'))
+    //             .reduce((order, item, index) => {
+    //                 order[item.id] = index + 1;
+    //                 return order;
+    //             }, {});
+    //         resolve(order);
+    //     }, 100);
+    // });
+    const newOrder = Array.from(document.querySelectorAll('.myDraggable'))
+    .filter(item => item.id && !item.classList.contains('draggable--original'))
+    .reduce((order, item, index) => {
+        order[item.id] = index + 1;
+        return order;
+    }, {});
     console.log(newOrder);
 
     try {

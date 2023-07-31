@@ -61,7 +61,7 @@
 
 							<li class="group relative flex w-full justify-center items-center rounded-lg px-2 py-1.5 text-sm text-gray-700 bg-teal-50 hover:bg-gray-100 ">
 								<svg class="" xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="1.25em" viewbox="0 0 512 512"><path d="M217.9 105.9L340.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L217.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1L32 320c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM352 416l64 0c17.7 0 32-14.3 32-32l0-256c0-17.7-14.3-32-32-32l-64 0c-17.7 0-32-14.3-32-32s14.3-32 32-32l64 0c53 0 96 43 96 96l0 256c0 53-43 96-96 96l-64 0c-17.7 0-32-14.3-32-32s14.3-32 32-32z"/></svg>
-								<a href="/login" class="block px-4 py-2 text-sm   ">Connexion</a>
+								<a href="/login" class="block px-4 py-2 text-sm ">Connexion</a>
 							</li>
 
 							<li class="group relative flex w-full justify-center items-center rounded-lg px-2 py-1.5 text-sm text-gray-700 hover:bg-gray-100 ">
@@ -78,10 +78,10 @@
 
 		</div>
 		<div id="searchbar" class=" hs-collapse mx-auto  overflow-hidden md:justify-center transition-all duration-300 grow flex">
-			<form class="w-full md:w-9/12   mt-5 md:mt-0">
+			<form method="GET" action="/searchRecipe" class="w-full md:w-9/12 mt-5 md:mt-0">
 				<div class="relative flex rounded-md shadow-sm">
-					<button type="button" class="py-3 px-4 inline-flex flex-shrink-0 justify-center text-white items-center rounded-l-md border border-transparent font-semibold bg-blue-500  hover:bg-blue-600 focus:z-10 focus:outline-none  transition-all text-sm">Search</button>
-					<input type="text" id="hs-leading-button-add-on-with-icon-and-button" name="hs-leading-button-add-on-with-icon-and-button" class="py-3 px-4 pr-11 block w-full border-gray-200 shadow-sm rounded-r-md text-sm focus:z-10   focus:outline-blue-500 transition-all">
+					<button type="submit" class="py-3 px-4 inline-flex flex-shrink-0 justify-center text-white items-center rounded-l-md border border-transparent font-semibold bg-blue-500  hover:bg-blue-600 focus:z-10 focus:outline-none  transition-all text-sm">Search</button>
+					<input type="text" name="search" id="searchInput"  class="py-3 px-4 pr-11 block w-full border-gray-200 shadow-sm rounded-r-md text-sm focus:z-10   focus:outline-blue-500 transition-all">
 					<div class="absolute inset-y-0 right-0 flex items-center pointer-events-none z-20 pr-4">
 						<svg class="h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewbox="0 0 16 16">
 							<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>

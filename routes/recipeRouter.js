@@ -10,8 +10,10 @@ const path = require('path');
 //landingPage TODO
 recipeRouter.get('/', async (req, res) => {
     try {
+        const recipesAutocompleter =  await recipeController.recipesForAutocomplete(req)
         res.render('templates/landing.twig', {
-            user: req.session.user
+            user: req.session.user,
+            recipesAutocompleter
         })
     } catch (error) {
         console.log(error);
@@ -22,7 +24,10 @@ recipeRouter.get('/', async (req, res) => {
 //affichage dashboard TODO
 recipeRouter.get('/dashboard', authguard, async (req, res) => {
     try {
-        res.render('templates/dashboard.twig')
+        const recipesAutocompleter =  await recipeController.recipesForAutocomplete(req)
+        res.render('templates/dashboard.twig',{
+            recipesAutocompleter
+        })
     } catch (error) {
         console.log(error);
         res.json(error)
@@ -111,12 +116,14 @@ recipeRouter.post('/addStep/:step/:recipeId', authguard, async (req, res) => {
 //affichage liste des recettes
 recipeRouter.get('/recipeList', authguard, async (req, res) => {
     try {
+        const recipesAutocompleter =  await recipeController.recipesForAutocomplete(req)
         const { recipeList, page, totalPages } = await recipeController.getRecipes(req);
        
         res.render('templates/recipeList.twig', {
             recipeList,
             page,
-            totalPages
+            totalPages,
+            recipesAutocompleter
         })
 
     } catch (error) {
@@ -128,6 +135,7 @@ recipeRouter.get('/recipeList', authguard, async (req, res) => {
 //affichage détails une fiche
 recipeRouter.get('/recipeDetails/:id', async (req, res) => {
     try {
+        const recipesAutocompleter =  await recipeController.recipesForAutocomplete(req)
         const {recipe, author, stepCount, ingredientSteps} = await recipeController.getRecipe(req);
         res.render('templates/recipeDetails.twig',{
             recipe,
@@ -135,7 +143,8 @@ recipeRouter.get('/recipeDetails/:id', async (req, res) => {
             steps: recipe.Steps,
             stepCount,
             ingredientSteps,
-            user: req.session.user
+            user: req.session.user,
+            recipesAutocompleter
         })
 
     } catch (error) {
@@ -253,7 +262,7 @@ recipeRouter.get('/deleteStep/:id', authguard, async(req,res) => {
 })
 
 //changer ordre etape
-recipeRouter.put('/updateRecipes', async(req, res) => {
+recipeRouter.put('/updateRecipes', authguard, async(req, res) => {
     try {
         await recipeController.updateRecipesOrder(req);
         res.send('Modification réussie')
@@ -264,7 +273,7 @@ recipeRouter.put('/updateRecipes', async(req, res) => {
 });
 
 //ajouter une nouvelle etape 
-recipeRouter.get('/addNewStep/:stepLength/:recipeId', async(req, res) => {
+recipeRouter.get('/addNewStep/:stepLength/:recipeId',authguard, async(req, res) => {
     try {
         const ingredients = await ingredientController.findAndSortIngredient(req);
         let stepLength =  parseInt(req.params.stepLength)+1
@@ -279,5 +288,23 @@ recipeRouter.get('/addNewStep/:stepLength/:recipeId', async(req, res) => {
         res.json({error: error.message})
     }
 })
+
+
+//rechercher recette
+recipeRouter.get('/searchRecipe', authguard, async(req,res)=>{
+    try {
+        const { recipeList, page, totalPages } = await recipeController.searchRecipe(req);
+        res.render('templates/recipeList.twig', {
+            recipeList,
+            page,
+            totalPages
+        })
+
+    } catch (error) {
+        console.log(error);
+        res.json({error: error.message})
+    }
+
+});
 
 module.exports = recipeRouter;

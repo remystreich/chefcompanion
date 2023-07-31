@@ -3,9 +3,15 @@
 {% block head %}
 
  <title>Dashboard</title>
+ <link rel="stylesheet" href="/css/autocomplete.css">
+<script src="/js/autocomplete.js"></script>
 
 {% endblock %}
     
 {% block main %}
     
+     <script>
+        let recipeListAutocomplete = {{recipesAutocompleter | json_encode}}
+   </script>
+   <script  src="/js/scriptautocomplete.js"></script>
 {% endblock %}

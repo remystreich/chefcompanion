@@ -3,6 +3,8 @@
 {% block head %}
 
 	<title>Liste des fiches</title>
+	<link rel="stylesheet" href="/css/autocomplete.css">
+<script src="/js/autocomplete.js"></script>
 
 {% endblock %}
 <!--TODO auteur et likes -->
@@ -71,4 +73,8 @@
 
 		</nav>
 	</main>
+	 <script>
+        let recipeListAutocomplete = {{recipesAutocompleter | json_encode}}
+   </script>
+   <script  src="/js/scriptautocomplete.js"></script>
 {% endblock %}

@@ -3,6 +3,8 @@
 {% block head %}
 
 	<title>{{recipe.title}}</title>
+    <link rel="stylesheet" href="/css/autocomplete.css">
+<script src="/js/autocomplete.js"></script>
 
 {% endblock %}
 
@@ -227,18 +229,22 @@
 					</div>
 				{% endif %}
 			{% endfor %}
-            {% if author.id == user.id %}
-                <p class="text-sm text-amber-400 my-3">Pour ajouter une nouvelle étape cliquez sur le bouton ci-dessous et donnez lui l'ordre une fois créée.</p>
-                <a href="/addNewStep/{{steps|length}}/{{recipe.id}}" class="rounded-lg border w-full mb-4 flex justify-center items-center text-4xl text-cyan-950 bg-white py-4  hover:bg-blue-200">
-                    <i class="fa-solid fa-plus"></i>
-                </a>
-            {% endif %}
+			{% if author.id == user.id %}
+				<p class="text-sm text-amber-400 my-3">Pour ajouter une nouvelle étape cliquez sur le bouton ci-dessous et donnez lui l'ordre une fois créée.</p>
+				<a href="/addNewStep/{{steps|length}}/{{recipe.id}}" class="rounded-lg border w-full mb-4 flex justify-center items-center text-4xl text-cyan-950 bg-white py-4  hover:bg-blue-200 hover:text-black">
+					<i class="fa-solid fa-plus"></i>
+				</a>
+			{% endif %}
 			{# TODO commentaires #}
 		</section>
 	</main>
 {% endblock %}
 
 {% block script %}
-    <script  src="/js/draggable.js"></script>
+	<script src="/js/draggable.js"></script>
 	<script src="/js/script.js"></script>
+	<script>
+		let recipeListAutocomplete = {{ recipesAutocompleter | json_encode }}
+	</script>
+	<script src="/js/scriptautocomplete.js"></script>
 {% endblock %}

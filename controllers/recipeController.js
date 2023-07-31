@@ -4,7 +4,7 @@ const ingredientModel = require('../models/IngredientModel')
 const userModel = require('../models/UserModel')
 const ingredientController = require('./ingredientController');
 const fs = require('fs');
-const Sequelize = require('sequelize');
+const {Sequelize, Op} = require('sequelize');
 
 //verif isOwner?
 const isOwner = async (req) => {
@@ -120,22 +120,28 @@ exports.validateAndCreateStep = async (req) => {
 
 //recuperer liste fiches
 exports.getRecipes = async (req) => {
-    let page = req.query.page && req.query.page > 0 ? parseInt(req.query.page) : 1;
-    const limit = 6
-    const offset = (page - 1) * limit;
-    const recipes = await recipeModel.findAndCountAll({
-        offset: offset,
-        limit: limit,
-        where: {
-            user_id: req.session.user.id //TODO recup recette aimées
-        },
-    })
-    const totalPages = Math.ceil(recipes.count / limit);
-    return {
-        recipeList: recipes.rows,
-        page,
-        totalPages
-    };
+    try {
+        let page = req.query.page && req.query.page > 0 ? parseInt(req.query.page) : 1;
+        const limit = 6
+        const offset = (page - 1) * limit;
+        const recipes = await recipeModel.findAndCountAll({
+            offset: offset,
+            limit: limit,
+            where: {
+                user_id: req.session.user.id //TODO recup recette aimées
+            },
+        })
+        const totalPages = Math.ceil(recipes.count / limit);
+        return {
+            recipeList: recipes.rows,
+            page,
+            totalPages
+        };
+
+    } catch (error) {
+        throw error
+    }
+   
 
 }
 
@@ -348,6 +354,58 @@ exports.updateRecipesOrder = async (req) => {
         // Wait for all updates to finish
         await Promise.all(promises);
 
+    } catch (error) {
+        throw error
+    }
+}
+
+//retourner résultat de recherche
+exports.searchRecipe = async (req) => {
+    try {
+        let page = req.query.page && req.query.page > 0 ? parseInt(req.query.page) : 1;
+        const limit = 6
+        const offset = (page - 1) * limit;
+        const searchQuery = req.query.search || '';
+
+        const recipes =  await recipeModel.findAndCountAll({
+            offset: offset,
+            limit: limit,
+            where: {
+                [Op.or]: [
+                    { user_id: req.session.user.id },
+                    { status: true }
+                  ],
+                  [Op.or]: [
+                    { title: { [Op.like]: '%' + searchQuery + '%' } },
+                    { description: { [Op.like]: '%' + searchQuery + '%' } },
+                  ]
+            }
+        })
+
+        const totalPages = Math.ceil(recipes.count / limit);
+
+        return {
+            recipeList: recipes.rows,
+            page,
+            totalPages
+        };
+    } catch (error) {
+        throw error
+    }
+}
+
+exports.recipesForAutocomplete = async (req)=> {
+    try {
+        const recipes = await recipeModel.findAll({
+            where: {
+                [Op.or]: [
+                    { user_id: req.session.user.id },
+                    { status: true }
+                  ],
+            }
+        })
+        return recipes
+        
     } catch (error) {
         throw error
     }
