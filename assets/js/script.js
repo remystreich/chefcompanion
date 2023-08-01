@@ -6,10 +6,10 @@ document.getElementById('ingredientForm').addEventListener('submit', async funct
     const formData = new FormData(this);
     const data = {};
     let url = this.getAttribute('action');
-    
-   
-    let method = url!= null ? 'PUT' : 'POST';
-   
+
+
+    let method = url != null ? 'PUT' : 'POST';
+
     // Convertir FormData en objet JSON
     for (let [key, value] of formData.entries()) {
         data[key] = value;
@@ -23,15 +23,15 @@ document.getElementById('ingredientForm').addEventListener('submit', async funct
             },
             body: JSON.stringify(data),
         });
-        
+
 
         if (!response.ok) {
             const errorData = await response.json();
             throw errorData.error
         }
-        
+
         window.location.reload();
-        
+
     } catch (error) {
         console.log(error);
 
@@ -82,20 +82,69 @@ document.getElementById('ingredientForm').addEventListener('submit', async funct
 });
 
 document.querySelectorAll('.myEditBtn').forEach(function (button) {
-    button.addEventListener('click', function (){
+    button.addEventListener('click', function () {
         let ingredient = JSON.parse(this.getAttribute('dataIngredient')).dataValues;
         console.log(ingredient);
-        document.getElementById('modalTitle').innerHTML = "Modifier "+ capitalize(ingredient.name) 
-        document.getElementById('name').value = capitalize(ingredient.name) 
+        document.getElementById('modalTitle').innerHTML = "Modifier " + capitalize(ingredient.name)
+        document.getElementById('name').value = capitalize(ingredient.name)
         document.getElementById('price').value = ingredient.price
         document.getElementById('type').value = ingredient.type
         document.getElementById('unit_mesure').value = ingredient.unit_mesure
-        document.getElementById('ingredientForm').setAttribute('action', '/updateIngredient/' + ingredient.id )
+        document.getElementById('ingredientForm').setAttribute('action', '/updateIngredient/' + ingredient.id)
     })
 })
 
 
 function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+//gestion des follow
+const followBtn = document.getElementById('followBtn')
+if (followBtn) {
+
+    followBtn.addEventListener('click', async () => {
+        const recipeId = followBtn.getAttribute('data-recipeId');
+        const isFollowed = followBtn.getAttribute('data-isFollowed')
+        
+        if (isFollowed === "true") {
+
+            removeFollow(recipeId)
+
+        } else {
+            
+            addFollow(recipeId)
+        }
+
+
+    });
+}
+//ajout de follow
+async function addFollow(recipeId) {
+    try {
+        const response = await fetch(`/follow/${recipeId}`, { method: 'POST' });
+
+        if (!response.ok) {
+            throw new Error('La requête a échoué ' + response.status);
+        }
+        followBtn.setAttribute('data-isFollowed', true);
+        followBtn.innerHTML= '<i class="fa-solid fa-heart"></i>'
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+//supprimer follow
+async function removeFollow(recipeId) {
+    try {
+        const response = await fetch(`/unfollow/${recipeId}`, { method: 'POST' });
+        if (!response.ok) {
+            throw new Error('La requête a échoué ' + response.status);
+        }
+        followBtn.setAttribute('data-isFollowed', false);
+        followBtn.innerHTML= '<i class="fa-regular fa-heart"></i>'
+    } catch (error) {
+        console.error(error);
+    }
 }
 

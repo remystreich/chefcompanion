@@ -1,14 +1,8 @@
-//gestion du form ajout d'ingredients
-
-// Pass single element
-// const element = document.getElementById('ingredientName')
-// var choices = new Choices(element, {
-//     allowHTML: true
-// });
+let choices;
 
 //initialiser le select avec choices.js
 function choicesLaunch(elem) {
-    new Choices(elem, {
+    choices = new Choices(elem, {
         allowHTML: true
     });
 }

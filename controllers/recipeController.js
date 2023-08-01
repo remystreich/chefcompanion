@@ -2,9 +2,10 @@ const recipeModel = require('../models/RecipeModel');
 const stepModel = require('../models/StepModel');
 const ingredientModel = require('../models/IngredientModel')
 const userModel = require('../models/UserModel')
+const followModel =  require('../models/FollowsModel')
 const ingredientController = require('./ingredientController');
 const fs = require('fs');
-const {Sequelize, Op} = require('sequelize');
+const { Sequelize, Op } = require('sequelize');
 
 //verif isOwner?
 const isOwner = async (req) => {
@@ -141,7 +142,7 @@ exports.getRecipes = async (req) => {
     } catch (error) {
         throw error
     }
-   
+
 
 }
 
@@ -185,11 +186,13 @@ exports.getRecipe = async (req) => {
             };
         });
 
-
+        const user = await userModel.findByPk(req.session.user.id);
+        const isFollowed = await user.hasFollowedRecipe(recipe);
+        const followsCount = await recipe.countFollowers();
         const author = await userModel.findByPk(recipe.user_id);
         const stepCount = await stepModel.count({ where: { recipe_id: req.params.id } });
 
-        return { recipe, author, stepCount, ingredientSteps };
+        return { recipe, author, stepCount, ingredientSteps, isFollowed, followsCount };
     } catch (error) {
         console.log(error);
     }
@@ -367,18 +370,18 @@ exports.searchRecipe = async (req) => {
         const offset = (page - 1) * limit;
         const searchQuery = req.query.search || '';
 
-        const recipes =  await recipeModel.findAndCountAll({
+        const recipes = await recipeModel.findAndCountAll({
             offset: offset,
             limit: limit,
             where: {
                 [Op.or]: [
                     { user_id: req.session.user.id },
                     { status: true }
-                  ],
-                  [Op.or]: [
+                ],
+                [Op.or]: [
                     { title: { [Op.like]: '%' + searchQuery + '%' } },
                     { description: { [Op.like]: '%' + searchQuery + '%' } },
-                  ]
+                ]
             }
         })
 
@@ -394,19 +397,50 @@ exports.searchRecipe = async (req) => {
     }
 }
 
-exports.recipesForAutocomplete = async (req)=> {
+//retourner la liste de recette apparaissant dans l'autocomplete
+exports.recipesForAutocomplete = async (req) => {
     try {
         const recipes = await recipeModel.findAll({
             where: {
                 [Op.or]: [
                     { user_id: req.session.user.id },
                     { status: true }
-                  ],
+                ],
             }
         })
         return recipes
+
+    } catch (error) {
+        throw error
+    }
+}
+
+//ajouter un like
+exports.addFollow = async (req) => {
+    try {
+        const user = await userModel.findByPk(req.session.user.id);
+        const recipe = await recipeModel.findByPk(req.params.id);
+
+        const existingFollow = await followModel.findOne({ where: { user_id: user.id, recipe_id: recipe.id } });
+        if (existingFollow) {
+            throw new Error('Vous suivez déjà cette recette');
+        }
+        await user.addFollowedRecipe(recipe);
+        return true
         
     } catch (error) {
         throw error
     }
 }
+
+//supprimer like
+exports.removeFollow = async (req) => {
+    try {
+        const user = await userModel.findByPk(req.session.user.id);
+        const recipe = await recipeModel.findByPk(req.params.id);
+        await user.removeFollowedRecipe(recipe);
+        return true;
+    } catch (error) {
+        throw error;
+    }
+};

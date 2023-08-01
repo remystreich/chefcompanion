@@ -40,7 +40,7 @@ exports.validateAndCreateIngredient = async (req) => {
     try {
         const savedIngredient = await newIngredient.save();
         return {
-            errors: null,
+           
             id: savedIngredient.id,
             name: savedIngredient.name,
         };

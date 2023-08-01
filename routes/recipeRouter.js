@@ -135,7 +135,8 @@ recipeRouter.get('/recipeList', authguard, async (req, res) => {
 recipeRouter.get('/recipeDetails/:id', async (req, res) => {
     try {
         const recipesAutocompleter =  await recipeController.recipesForAutocomplete(req)
-        const {recipe, author, stepCount, ingredientSteps} = await recipeController.getRecipe(req);
+        const {recipe, author, stepCount, ingredientSteps, isFollowed, followsCount } = await recipeController.getRecipe(req);
+        
         res.render('templates/recipeDetails.twig',{
             recipe,
             author,
@@ -143,7 +144,9 @@ recipeRouter.get('/recipeDetails/:id', async (req, res) => {
             stepCount,
             ingredientSteps,
             user: req.session.user,
-            recipesAutocompleter
+            recipesAutocompleter,
+            isFollowed,
+            followsCount
         })
 
     } catch (error) {
@@ -306,6 +309,30 @@ recipeRouter.get('/searchRecipe', authguard, async(req,res)=>{
 
 });
 
+//ajouter un like
+recipeRouter.post('/follow/:id', authguard, async(req,res) => {
+    try {
+        await recipeController.addFollow(req)
+        res.json({success: true});
+     
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({error: error.message});
+    }
+})
+
+//supprimer like
+recipeRouter.post('/unfollow/:id', authguard, async(req, res) => {
+    try {
+       
+        await recipeController.removeFollow(req);
+        res.json({success: true});
+
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({error: error.message});
+    }
+});
 
 
 module.exports = recipeRouter;

@@ -10,6 +10,7 @@ ingredientRouter.post('/addIngredient', authguard,  async (req, res) => {
         let result = await ingredientController.validateAndCreateIngredient(req)
         console.log(result);
         if (result.errors) {
+            
             throw result.errors
         }
         res.json({ 
