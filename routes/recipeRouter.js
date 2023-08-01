@@ -76,7 +76,6 @@ recipeRouter.get('/addRecipe/:step/:recipeId', authguard, async (req, res) => {
             stepNmbr: req.params.step,
             recipeId: req.params.recipeId,
             ingredients,
-
         });
 
     } catch (error) {
@@ -306,5 +305,7 @@ recipeRouter.get('/searchRecipe', authguard, async(req,res)=>{
     }
 
 });
+
+
 
 module.exports = recipeRouter;

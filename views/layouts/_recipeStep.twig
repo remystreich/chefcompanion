@@ -1,6 +1,6 @@
-<div class="relative px-6 pt-12 pb-32 mx-auto    md:px-12  md:pt-14">
+<div class="relative px-1 md:px-6 pt-12 pb-32 mx-auto md:px-12  md:pt-14">
 	<div class="block rounded-lg bg-white bg-opacity-80   shadow-sm shadow-gray-100 md:py-4 px-5 md:px-20">
-		<div class=" px-4 py-8 mx-auto lg:py-10">
+		<div class=" px-0 md:px-6 py-8 mx-auto lg:py-10">
 			<h2 class="mb-10 text-5xl font-bold text-center text-blue-600 font-serif">Étape
 				{{stepNmbr}}
 				{% if step %}
@@ -60,9 +60,7 @@
 					<div
 						class="col-span-1 mt-4 text-center md:col-span-2 flex flex-wrap justify-center gap-5 ">
 						<!--TODO bouton etape precedente-->
-						{% if step or stepLength is not defined%}
-							<button type="submit" name="action" value="next" class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm order-2 md:order-1">Etape précédente</button>
-						{% endif %}
+					
 
 						<button type="submit" name="action" value="end" class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-amber-500 text-white hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-all text-sm order-1 md:order-2">Terminer</button>
 						
