@@ -400,18 +400,28 @@ exports.searchRecipe = async (req) => {
 //retourner la liste de recette apparaissant dans l'autocomplete
 exports.recipesForAutocomplete = async (req) => {
     try {
-        const recipes = await recipeModel.findAll({
-            where: {
+        const userId = req.session && req.session.user ? req.session.user.id : null;
+        let condition;
+
+        if(userId) {
+            condition = {
                 [Op.or]: [
-                    { user_id: req.session.user.id },
+                    { user_id: userId },
                     { status: true }
                 ],
-            }
+            };
+        } else {
+            condition = { status: true };
+        }
+
+        const recipes = await recipeModel.findAll({
+            where: condition
         })
-        return recipes
+
+        return recipes;
 
     } catch (error) {
-        throw error
+        throw error;
     }
 }
 

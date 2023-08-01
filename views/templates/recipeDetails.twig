@@ -55,14 +55,14 @@
 			</div>
 
 			<div class="col-span-1 bg-blue-500 flex flex-col justify-center items-center rounded-lg border border-cwhite p-6">
-				<button id="followBtn" data-isfollowed={{isFollowed}} data-recipeid="{{recipe.id}}" class="text-red-500 text-4xl">
+				<button id="followBtn" data-isfollowed={{isFollowed}} data-recipeid="{{recipe.id}}" class="text-red-500 text-4xl ">
 					{% if isFollowed %}
 						<i class="fa-solid fa-heart"></i>
 					{% else %}
 						<i class="fa-regular fa-heart"></i>
 					{% endif %}
-					<p class="rounded-full p-1 bg-gray-100 text-sm text-black">{{followsCount}}</p>
 				</button>
+				<p class="rounded-full px-2 bg-gray-100 text-sm text-black">{{followsCount}}</p>
 
 			</div>
 
