@@ -18,10 +18,6 @@ app.use(session({
     saveUninitialized: true
 }));
 
-app.use(function(req, res, next) {
-    req.session.userId =   1;
-    next()
-})
 
 app.use(express.urlencoded({ extended: true }))
 app.use(userRouter);

@@ -2,8 +2,7 @@ const recipeModel = require('../models/RecipeModel');
 const stepModel = require('../models/StepModel');
 const ingredientModel = require('../models/IngredientModel')
 const userModel = require('../models/UserModel')
-const followModel =  require('../models/FollowsModel')
-const ingredientController = require('./ingredientController');
+const followModel = require('../models/FollowsModel')
 const fs = require('fs');
 const { Sequelize, Op } = require('sequelize');
 
@@ -16,13 +15,13 @@ const isOwner = async (req) => {
     return recipe;
 };
 
+//verif isowner step
 const isOwnerStep = async (req, id) => {
     const step = await stepModel.findOne({
         where: { id: id },
         include: {
             model: recipeModel,
-            as: 'Recipe', // utilisez l'alias que vous avez défini lors de la création de l'association
-
+            as: 'Recipe',
         }
     });
     // Vérifie si l'étape a été trouvée et si l'utilisateur est le propriétaire de l'étape
@@ -36,10 +35,10 @@ const isOwnerStep = async (req, id) => {
 
 //créer fiche
 exports.validateAndCreateRecipe = async (req) => {
-    let errors = {};
+    const errors = {};
 
     if (req.multerError) {
-        errors.fileError = "Veuillez entrer un fichier valide"
+        errors.fileError = "Veuillez entrer un fichier valide";
     }
 
     const { title, description, guest_number, category, status: rawStatus } = req.body;
@@ -47,77 +46,74 @@ exports.validateAndCreateRecipe = async (req) => {
     const photo = (req.file && !req.multerError) ? req.file.filename : undefined;
     const status = rawStatus === 'on';
 
-    const newRecipe = recipeModel.build({
-        title,
-        description,
-        guest_number,
-        photo,
-        category,
-        status,
-        user_id,
-    });
-
     try {
-        await newRecipe.validate();
-    } catch (validationError) {
-        validationError.errors.forEach((err) => {
+        //créer un objet et enregistrer en bdd
+        const newRecipe = await recipeModel.create({
+            title,
+            description,
+            guest_number,
+            photo,
+            category,
+            status,
+            user_id,
+        });
+        //retourner l'id de la recette créee pour l'associer aux etapes
+        return newRecipe.id;
+
+    } catch (error) {
+        error.errors.forEach((err) => {
             errors[err.path] = err.message;
         });
+        throw errors;
     }
-
-    if (Object.keys(errors).length > 0) {
-        return { errors, id: null };
-    }
-
-    const savedRecipe = await newRecipe.save();
-    return { errors: null, id: savedRecipe.id };
 };
 
 //créer étapes
 exports.validateAndCreateStep = async (req) => {
-    let errors = { ingredients: [] };
-    const { title, details, ingredients, quantity } = req.body;
-    const step_number = req.params.step;
-    const recipe_id = req.params.recipeId;
-
-    const newStep = stepModel.build({
-        title,
-        details,
-        step_number,
-        recipe_id
-    });
-
     try {
-        await newStep.validate();
-    } catch (validationError) {
-        validationError.errors.forEach((err) => {
-            errors[err.path] = err.message;
+        const { title, details, ingredients, quantity } = req.body;
+        const step_number = req.params.step;
+        const recipe_id = req.params.recipeId;
+
+        const newStep = stepModel.build({
+            title,
+            details,
+            step_number,
+            recipe_id,
         });
-    }
 
+        await newStep.validate();
 
-    // Validate ingredients
-    const ingredientObjects = [];
-    if (ingredients) {
-        for (let i = 0; i < ingredients.length; i++) {
-            let ingredient = await ingredientModel.findByPk(ingredients[i]);
-            if (!ingredient) {
-                errors.ingredients[i] = `Cet ingrédient n'existe pas en base.`;
-            } else {
-                errors.ingredients[i] = null
-                ingredientObjects.push({ ingredient, quantity: quantity[i] });
-            }
+        // Validate and fetch ingredients
+        let ingredientObjects = [];
+        if (ingredients) {
+            const ingredientPromises = ingredients.map((ingredientId, i) => ingredientModel.findByPk(ingredientId));
+            ingredientObjects = await Promise.all(ingredientPromises);
+            
         }
-    }
-    if (errors.ingredients.some(error => error !== null) || Object.keys(errors).length > 1) {
-        return errors;
-    } else {
+       
+
+
+        // Save the step and add ingredients
         await newStep.save();
-        for (let elem of ingredientObjects) {
-            await newStep.addIngredient(elem.ingredient, { through: { quantity: elem.quantity } });
+        
+        if (ingredients) {
+            await Promise.all(ingredientObjects.map((ingredient, i) => {
+                return newStep.addIngredient(ingredient, { through: { quantity: quantity[i] } });
+            }));
         }
+       
+
+    } catch (error) {
+        console.log(error);
+        let validationErrors = {};
+        error.errors.forEach((err) => {
+            validationErrors[err.path] = err.message;
+        });
+        throw validationErrors;
     }
 };
+
 
 //recuperer liste fiches
 exports.getRecipes = async (req) => {
@@ -142,49 +138,13 @@ exports.getRecipes = async (req) => {
     } catch (error) {
         throw error
     }
-
-
 }
 
 //récupérer UNE fiche
 exports.getRecipe = async (req) => {
     try {
-        const recipe = await recipeModel.findByPk(req.params.id, {
-            subQuery: false,
-            include: [{
-                model: stepModel,
-                as: 'Steps',
-                include: [{
-                    model: ingredientModel,
-                    as: 'Ingredients',
-                    through: { attributes: ['quantity'] }
-                }]
-            }],
-            order: [[{ model: stepModel, as: 'Steps' }, 'step_number', 'ASC']],
-        });
-
-        const allSteps = recipe.Steps;
-        let allIngredients = allSteps.flatMap(step => step.Ingredients);
-
-        let uniqueIngredients = Object.values(allIngredients.reduce((result, ingredient) => {
-            result[ingredient.id] = ingredient;
-            return result;
-        }, {}));
-        // TODO:groupBy sequelize
-
-        // Construire la structure de données
-        let ingredientSteps = uniqueIngredients.map(ingredient => {
-            let steps = allSteps.map(step => {
-                let ingredientInStep = step.Ingredients.find(i => i.id === ingredient.id);
-                return ingredientInStep ? ingredientInStep.Step_Ingredient.quantity : 0;
-            });
-            return {
-                ingredient: ingredient.name,
-                price: ingredient.price,
-                unit_mesure: ingredient.unit_mesure,
-                steps: steps
-            };
-        });
+        const recipe = await getRecipeWithStepsAndIngredients(req.params.id);
+        const ingredientSteps = calculateIngredientSteps(recipe.Steps);
 
         const user = await userModel.findByPk(req.session.user.id);
         const isFollowed = await user.hasFollowedRecipe(recipe);
@@ -194,9 +154,47 @@ exports.getRecipe = async (req) => {
 
         return { recipe, author, stepCount, ingredientSteps, isFollowed, followsCount };
     } catch (error) {
-        console.log(error);
+        throw error;
     }
 };
+
+async function getRecipeWithStepsAndIngredients(id) {
+    return await recipeModel.findByPk(id, {
+        subQuery: false,
+        include: [{
+            model: stepModel,
+            as: 'Steps',
+            include: [{
+                model: ingredientModel,
+                as: 'Ingredients',
+                through: { attributes: ['quantity'] }
+            }]
+        }],
+        order: [[{ model: stepModel, as: 'Steps' }, 'step_number', 'ASC']],
+    });
+}
+
+function calculateIngredientSteps(allSteps) {
+    let allIngredients = allSteps.flatMap(step => step.Ingredients);
+
+    let uniqueIngredients = Object.values(allIngredients.reduce((result, ingredient) => {
+        result[ingredient.id] = ingredient;
+        return result;
+    }, {}));
+
+    return uniqueIngredients.map(ingredient => {
+        let steps = allSteps.map(step => {
+            let ingredientInStep = step.Ingredients.find(i => i.id === ingredient.id);
+            return ingredientInStep ? ingredientInStep.Step_Ingredient.quantity : 0;
+        });
+        return {
+            ingredient: ingredient.name,
+            price: ingredient.price,
+            unit_mesure: ingredient.unit_mesure,
+            steps: steps
+        };
+    });
+}
 
 //supprimer fiche
 exports.deleteRecipe = async (req) => {
@@ -403,7 +401,7 @@ exports.recipesForAutocomplete = async (req) => {
         const userId = req.session && req.session.user ? req.session.user.id : null;
         let condition;
 
-        if(userId) {
+        if (userId) {
             condition = {
                 [Op.or]: [
                     { user_id: userId },
@@ -437,7 +435,7 @@ exports.addFollow = async (req) => {
         }
         await user.addFollowedRecipe(recipe);
         return true
-        
+
     } catch (error) {
         throw error
     }

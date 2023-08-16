@@ -6,50 +6,46 @@ const { Sequelize } = require('sequelize'); // Make sure to import Sequelize
 const isOwner = async (req) => {
     const ingredient = await ingredientModel.findOne({ where: { id: req.params.id, user_id: req.session.userId } });
     if (!ingredient) {
-      throw new Error('Vous devez être le propriétaire pour apporter des modifications');
+        throw new Error('Vous devez être le propriétaire pour apporter des modifications');
     }
-  };
+};
 
 
+//creation ingrédients
 exports.validateAndCreateIngredient = async (req) => {
     let errors = {};
 
     const { name, type, unit_mesure, price } = req.body;
     const user_id = req.session.user.id;
 
-    const newIngredient = ingredientModel.build({
-        name,
-        type,
-        unit_mesure,
-        price,
-        user_id,
-    });
-
     try {
-        await newIngredient.validate();
-    } catch (validationError) {
-        validationError.errors.forEach((err) => {
-            errors[err.path] = err.message;
+        const newIngredient = await ingredientModel.create({
+            name,
+            type,
+            unit_mesure,
+            price,
+            user_id,
         });
-    }
-
-    if (Object.keys(errors).length > 0) {
-        return { errors, id: null };
-    }
-
-    try {
-        const savedIngredient = await newIngredient.save();
         return {
-           
-            id: savedIngredient.id,
-            name: savedIngredient.name,
+            id: newIngredient.id,
+            name: newIngredient.name,
         };
-    } catch (saveError) {
-        errors['name'] = 'Un ingrédient avec ce nom existe déjà.';
-        throw errors;
+    } catch (error) {
+        if (error.name === 'SequelizeValidationError') {
+            //créer un tableau d'erreur
+            error.errors.forEach((err) => {
+                errors[err.path] = err.message;
+            });
+            return { errors, id: null };
+        } else if (error.name === 'SequelizeUniqueConstraintError') {
+            errors['name'] = 'Un ingrédient avec ce nom existe déjà.';
+            throw errors;
+        }
+        throw error;
     }
 };
 
+//retourner liste d'ingrédients triés par catégorie
 exports.findAndSortIngredient = async (req) => {
     const userId = req.session.user.id;
     const ingredients = await ingredientModel.findAll({
@@ -71,18 +67,20 @@ exports.findAndSortIngredient = async (req) => {
     return categories;
 }
 
+//supprimer un ingrédient
 exports.deleteIngredient = async (req) => {
     try {
         await isOwner(req);
         const ingredientId = req.params.id;
+
+        //vérifier si l'ingrédient est utilisé dans une recette
         const usedIngredient = await stepIngredientModel.findOne({
             where: { ingredientId }
         })
-
         if (usedIngredient) {
             throw new Error('Cet ingrédient est utilisé dans au moins une fiche technique et ne peut pas etre supprimé')
         }
-
+        //si pas utilisé on le supprime
         const ingredient = await ingredientModel.findByPk(ingredientId);
         await ingredient.destroy();
     } catch (error) {
@@ -90,38 +88,34 @@ exports.deleteIngredient = async (req) => {
     }
 }
 
+
+//update ingrédient
 exports.validateAndUpdateIngredient = async (req) => {
-    await isOwner(req);
-    let errors = {};
-    
-    const { name, type, unit_mesure, price } = req.body;
-
-    let updateIngredient = await ingredientModel.findByPk(req.params.id);
-    updateIngredient.name = name;
-    updateIngredient.type = type;
-    updateIngredient.unit_mesure = unit_mesure;
-    updateIngredient.price = price;
-
     try {
-    await updateIngredient.validate();
-    
-    } catch (validationError) {
-        validationError.errors.forEach((err) => {
-            errors[err.path] = err.message;
+        await isOwner(req);
+
+        const { name, type, unit_mesure, price } = req.body;
+        const { id } = req.params;
+
+
+        await ingredientModel.update({
+            name,
+            type,
+            unit_mesure,
+            price
+        }, {
+            where: { id }
         });
-    }
 
-    if (Object.keys(errors).length > 0) {
-        return errors;
+    } catch (error) {
+        const errors = {};
+        error.errors.forEach((err) => {
+            if (err.validatorKey === 'not_unique') {
+                errors['name'] = 'Un ingrédient avec ce nom existe déjà.';
+            } else {
+                errors[err.path] = err.message;
+            }
+        });
+        throw errors;
     }
-
-    try {
-        await updateIngredient.save();
-    } catch (saveError) {
-        if (saveError instanceof Sequelize.UniqueConstraintError) {
-            return { name: 'Un ingrédient avec ce nom existe déjà.' };
-        }
-        throw saveError; 
-    }
-
-}
+};

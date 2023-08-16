@@ -11,7 +11,7 @@ User.hasMany(Recipe, { as: 'Recipes', foreignKey: 'user_id' });
 Recipe.belongsTo(User, { as: 'User', foreignKey: 'user_id' });
 
 //jointures recipe -> steps
-Recipe.hasMany(Step, { as: 'Steps', foreignKey: 'recipe_id' });
+Recipe.hasMany(Step, { as: 'Steps', onDelete: 'cascade',  foreignKey: 'recipe_id' });
 Step.belongsTo(Recipe, { as: 'Recipe', foreignKey: 'recipe_id' });
 
 //jointures user -> ingredients

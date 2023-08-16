@@ -66,10 +66,7 @@ ingredientRouter.get('/deleteIngredient/:id', authguard, async (req,res)=> {
 //modifier un ingrédient
 ingredientRouter.put('/updateIngredient/:id' , authguard, async (req,res)=>{
     try {
-        let errors = await ingredientController.validateAndUpdateIngredient(req)
-        if (errors) {
-            throw errors
-        }                              
+        await ingredientController.validateAndUpdateIngredient(req)                   
         res.send('Modification réussie')
     } catch (error) {
         console.log(error)

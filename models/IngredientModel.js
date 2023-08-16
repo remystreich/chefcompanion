@@ -1,5 +1,6 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../database');
+const UserModel = require('./UserModel')
 
 const IngredientModel = sequelize.define('Ingredient', {
     id: {
@@ -11,7 +12,7 @@ const IngredientModel = sequelize.define('Ingredient', {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
+        unique: 'uniqueIngredientPerUser',
         set(value) {
             this.setDataValue('name', value.toLowerCase());
         },
@@ -71,6 +72,14 @@ const IngredientModel = sequelize.define('Ingredient', {
             min: 0, // La valeur doit être supérieure ou égale à 0
         }
     },
+    user_id: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: UserModel, // Ceci est la référence directe au modèle, plutôt qu'au nom de la table
+            key: 'id'
+        },
+        unique: 'uniqueIngredientPerUser',  // Identifiant de la contrainte
+    }
 });
 
 module.exports = IngredientModel;
